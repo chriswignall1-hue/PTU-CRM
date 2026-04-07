@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pure Transfer University — CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Poppins',sans-serif;background:#0a1628;color:#fff;min-height:100vh;}
+:root{--navy:#0a1628;--cyan:#00b4d8;--yellow:#ffd60a;}
+.header{background:#0a1628;border-bottom:2px solid var(--cyan);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-mark{width:36px;height:36px;background:var(--cyan);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#0a1628;}
+.logo-text{font-size:16px;font-weight:600;color:#fff;}
+.logo-sub{font-size:11px;color:var(--cyan);font-weight:400;}
+.header-right{display:flex;align-items:center;gap:12px;}
+#sync-status{font-size:11px;color:rgba(255,255,255,0.35);}
+.body{padding:20px 24px;}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;}
+@media(max-width:600px){.stats{grid-template-columns:repeat(2,1fr);}}
+.stat{background:rgba(255,255,255,0.06);border:0.5px solid rgba(0,180,216,0.25);border-radius:10px;padding:12px 16px;}
+.stat-label{font-size:11px;color:rgba(255,255,255,0.45);margin-bottom:4px;}
+.stat-value{font-size:22px;font-weight:600;}
+.stat-value.cyan{color:var(--cyan);}
+.toolbar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.search-wrap{flex:1;min-width:220px;position:relative;}
+.search-wrap input{width:100%;background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px 12px 10px 38px;font-size:13px;color:#fff;font-family:'Poppins',sans-serif;outline:none;}
+.search-wrap input::placeholder{color:rgba(255,255,255,0.3);}
+.search-wrap input:focus{border-color:var(--cyan);}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:0.35;pointer-events:none;}
+select{background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:'Poppins',sans-serif;outline:none;cursor:pointer;}
+select:focus{border-color:var(--cyan);}
+select option{background:#0f2035;color:#fff;}
+.btn{padding:10px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Poppins',sans-serif;border:none;}
+.btn-cyan{background:var(--cyan);color:#0a1628;}
+.btn-cyan:hover{opacity:0.85;}
+.btn-ghost{background:rgba(255,255,255,0.08);color:#fff;border:0.5px solid rgba(255,255,255,0.2);}
+.btn-ghost:hover{background:rgba(255,255,255,0.14);}
+.table-wrap{background:rgba(255,255,255,0.03);border:0.5px solid rgba(255,255,255,0.1);border-radius:12px;overflow:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:800px;}
+th{padding:11px 14px;text-align:left;font-size:11px;font-weight:500;color:rgba(255,255,255,0.4);border-bottom:0.5px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);white-space:nowrap;}
+td{padding:10px 14px;border-bottom:0.5px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.85);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(0,180,216,0.05);}
+.name-cell{display:flex;align-items:center;gap:8px;}
+.av{width:28px;height:28px;border-radius:50%;background:var(--cyan);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#0a1628;flex-shrink:0;}
+.badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;white-space:nowrap;}
+.badge-warm{background:rgba(255,214,10,0.15);color:var(--yellow);}
+.badge-cold{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);}
+.badge-call{background:rgba(0,180,216,0.15);color:var(--cyan);}
+.badge-none{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.25);}
+.actions{display:flex;gap:6px;}
+.act-btn{background:none;border:0.5px solid rgba(255,255,255,0.15);border-radius:5px;padding:4px 10px;font-size:11px;color:rgba(255,255,255,0.55);cursor:pointer;font-family:'Poppins',sans-serif;white-space:nowrap;}
+.act-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+.act-btn.del:hover{border-color:#e74c3c;color:#e74c3c;}
+.pagination{display:flex;align-items:center;justify-content:space-between;padding:14px 0 4px;font-size:12px;color:rgba(255,255,255,0.35);}
+.page-btns{display:flex;gap:6px;}
+.page-btn{background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:6px;padding:6px 12px;font-size:12px;color:#fff;cursor:pointer;font-family:'Poppins',sans-serif;}
+.page-btn:hover{border-color:var(--cyan);}
+.page-btn.active{background:var(--cyan);color:#0a1628;border-color:var(--cyan);font-weight:600;}
+.loading{text-align:center;padding:60px 20px;color:rgba(255,255,255,0.4);font-size:14px;}
+.spinner{width:28px;height:28px;border:2px solid rgba(0,180,216,0.2);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.error-box{background:rgba(231,76,60,0.1);border:0.5px solid rgba(231,76,60,0.3);border-radius:8px;padding:14px 16px;font-size:13px;color:#e74c3c;margin-bottom:16px;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;}
+.modal{background:#0f2035;border:0.5px solid rgba(0,180,216,0.3);border-radius:14px;padding:24px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;}
+.modal h3{font-size:16px;font-weight:600;margin-bottom:18px;}
+.field{margin-bottom:13px;}
+.field label{font-size:11px;color:rgba(255,255,255,0.4);display:block;margin-bottom:5px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em;}
+.field input,.field select{width:100%;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.15);border-radius:8px;padding:10px 12px;font-size:13px;color:#fff;font-family:'Poppins',sans-serif;outline:none;}
+.field input:focus,.field select:focus{border-color:var(--cyan);}
+.field input::placeholder{color:rgba(255,255,255,0.2);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;}
+.modal-err{background:rgba(231,76,60,0.1);border:0.5px solid rgba(231,76,60,0.3);border-radius:7px;padding:10px 12px;font-size:12px;color:#e74c3c;margin-bottom:12px;display:none;}
+.li-link{color:var(--cyan);font-size:12px;text-decoration:none;}
+.li-link:hover{text-decoration:underline;}
+.empty{text-align:center;padding:40px;color:rgba(255,255,255,0.25);font-size:13px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-mark">PT</div>
+    <div>
+      <div class="logo-text">Pure Transfer University</div>
+      <div class="logo-sub">CRM — North East Project</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span id="sync-status"></span>
+    <button class="btn btn-cyan" onclick="openModal()">+ Add contact</button>
+  </div>
+</div>
+
+<div class="body">
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Total contacts</div><div class="stat-value" id="s-total">—</div></div>
+    <div class="stat"><div class="stat-label">With email</div><div class="stat-value cyan" id="s-email">—</div></div>
+    <div class="stat"><div class="stat-label">Warm leads</div><div class="stat-value cyan" id="s-warm">—</div></div>
+    <div class="stat"><div class="stat-label">Companies</div><div class="stat-value" id="s-cos">—</div></div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search" placeholder="Search by name, company, email, role..." oninput="onFilter()">
+    </div>
+    <select id="f-company" onchange="onFilter()"><option value="">All companies</option></select>
+    <select id="f-lead" onchange="onFilter()">
+      <option value="">All lead types</option>
+      <option value="Warm">Warm</option>
+      <option value="Cold">Cold</option>
+      <option value="Needs a Call">Needs a Call</option>
+    </select>
+    <select id="f-email" onchange="onFilter()">
+      <option value="">All contacts</option>
+      <option value="yes">Has email</option>
+      <option value="no">No email</option>
+    </select>
+    <button class="btn btn-ghost" onclick="loadData()">&#8635; Refresh</button>
+  </div>
+
+  <div id="main-content">
+    <div class="loading"><div class="spinner"></div>Loading contacts from Google Sheets...</div>
+  </div>
+</div>
+
+<div id="modal-area"></div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbxjRIHInTqY-ciUGlHcigI63jY9_9twrPCTE8rmY3TIu1ZE5NDL48Y9B4PIewFmVue-/exec';
+const PER_PAGE = 50;
+let allContacts = [];
+let filtered = [];
+let page = 1;
+let editingId = null;
+
+async function loadData() {
+  document.getElementById('sync-status').textContent = 'Syncing...';
+  document.getElementById('main-content').innerHTML = '<div class="loading"><div class="spinner"></div>Loading contacts...</div>';
+  try {
+    const res = await fetch(API + '?action=getAll');
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    allContacts = data;
+    populateCompanyFilter();
+    updateStats();
+    page = 1;
+    render();
+    document.getElementById('sync-status').textContent = 'Synced ' + new Date().toLocaleTimeString();
+  } catch(e) {
+    document.getElementById('main-content').innerHTML = `<div class="error-box">Could not connect to Google Sheets. Make sure the Apps Script is deployed with "Anyone" access and try refreshing.<br><br><small>${e.message}</small></div>`;
+    document.getElementById('sync-status').textContent = 'Connection error';
+  }
+}
+
+function populateCompanyFilter() {
+  const cos = [...new Set(allContacts.map(c => c['Company']).filter(Boolean))].sort();
+  const sel = document.getElementById('f-company');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">All companies</option>' + cos.map(c => `<option value="${escHtml(c)}" ${c===cur?'selected':''}>${escHtml(c)}</option>`).join('');
+}
+
+function updateStats() {
+  document.getElementById('s-total').textContent = allContacts.length.toLocaleString();
+  document.getElementById('s-email').textContent = allContacts.filter(c => c['Email Address']).length.toLocaleString();
+  document.getElementById('s-warm').textContent = allContacts.filter(c => c['Lead Type'] === 'Warm').length.toLocaleString();
+  document.getElementById('s-cos').textContent = new Set(allContacts.map(c => c['Company']).filter(Boolean)).size.toLocaleString();
+}
+
+function onFilter() { page = 1; render(); }
+
+function getFiltered() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const fc = document.getElementById('f-company').value;
+  const fl = document.getElementById('f-lead').value;
+  const fe = document.getElementById('f-email').value;
+  return allContacts.filter(c => {
+    if (q) {
+      const hay = [c['First Name'],c['Last Name'],c['Company'],c['Email Address'],c['Department/Position']].join(' ').toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    if (fc && c['Company'] !== fc) return false;
+    if (fl && c['Lead Type'] !== fl) return false;
+    if (fe === 'yes' && !c['Email Address']) return false;
+    if (fe === 'no' && c['Email Address']) return false;
+    return true;
+  });
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function initials(c) {
+  return ((c['First Name']||'')[0]||(c['Last Name']||'')[0]||'?').toUpperCase() +
+         ((c['Last Name']||'')[0]||'').toUpperCase();
+}
+
+function badgeHtml(lt) {
+  if (!lt) return '<span class="badge badge-none">—</span>';
+  if (lt==='Warm') return '<span class="badge badge-warm">Warm</span>';
+  if (lt==='Cold') return '<span class="badge badge-cold">Cold</span>';
+  if (lt==='Needs a Call') return '<span class="badge badge-call">Needs a Call</span>';
+  return `<span class="badge badge-none">${escHtml(lt)}</span>`;
+}
+
+function render() {
+  filtered = getFiltered();
+  const total = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
+  if (page > totalPages) page = 1;
+  const slice = filtered.slice((page-1)*PER_PAGE, page*PER_PAGE);
+
+  let html = '<div class="table-wrap"><table><thead><tr>' +
+    '<th>Name</th><th>Company</th><th>Role</th><th>Email</th><th>Phone</th><th>Lead type</th><th>LinkedIn</th><th>Actions</th>' +
+    '</tr></thead><tbody>';
+
+  if (slice.length === 0) {
+    html += '<tr><td colspan="8"><div class="empty">No contacts match your search</div></td></tr>';
+  } else {
+    slice.forEach(c => {
+      const name = [c['First Name'],c['Last Name']].filter(Boolean).join(' ') || '—';
+      const li = c['Linkedin Link']
+        ? `<a href="${escHtml(c['Linkedin Link'])}" class="li-link" target="_blank" rel="noopener">View</a>`
+        : '<span style="color:rgba(255,255,255,0.2);font-size:12px;">—</span>';
+      const safeC = escHtml(JSON.stringify(c).replace(/'/g,"&#39;"));
+      html += `<tr>
+        <td><div class="name-cell"><div class="av">${initials(c)}</div><span title="${escHtml(name)}">${escHtml(name)}</span></div></td>
+        <td title="${escHtml(c['Company']||'')}">${escHtml(c['Company']||'—')}</td>
+        <td title="${escHtml(c['Department/Position']||'')}">${escHtml(c['Department/Position']||'—')}</td>
+        <td title="${escHtml(c['Email Address']||'')}" style="color:${c['Email Address']?'#00b4d8':'rgba(255,255,255,0.25)'};font-size:12px;">${escHtml(c['Email Address']||'—')}</td>
+        <td style="font-size:12px;">${escHtml(c['Contact Number']||'—')}</td>
+        <td>${badgeHtml(c['Lead Type'])}</td>
+        <td>${li}</td>
+        <td><div class="actions">
+          <button class="act-btn" onclick="openModalWithData(${c._id})">Edit</button>
+          <button class="act-btn del" onclick="deleteContact(${c._id},'${escHtml(name)}')">Del</button>
+        </div></td>
+      </tr>`;
+    });
+  }
+
+  html += '</tbody></table></div>';
+  const from = total === 0 ? 0 : (page-1)*PER_PAGE+1;
+  const to = Math.min(page*PER_PAGE, total);
+  html += `<div class="pagination">
+    <span>Showing ${from}–${to} of ${total.toLocaleString()} contacts</span>
+    <div class="page-btns">
+      <button class="page-btn" onclick="changePage(-1)" ${page===1?'disabled style="opacity:0.3;cursor:default"':''}>&#8592; Prev</button>
+      <button class="page-btn active">${page} / ${totalPages}</button>
+      <button class="page-btn" onclick="changePage(1)" ${page>=totalPages?'disabled style="opacity:0.3;cursor:default"':''}>Next &#8594;</button>
+    </div>
+  </div>`;
+
+  document.getElementById('main-content').innerHTML = html;
+}
+
+function changePage(dir) {
+  const totalPages = Math.ceil(filtered.length / PER_PAGE);
+  page = Math.max(1, Math.min(page + dir, totalPages));
+  render();
+}
+
+function openModalWithData(id) {
+  const c = allContacts.find(x => x._id === id);
+  if (c) openModal(c);
+}
+
+function openModal(contact) {
+  editingId = contact ? contact._id : null;
+  const c = contact || {};
+  document.getElementById('modal-area').innerHTML = `
+    <div class="modal-overlay" id="overlay" onclick="overlayClick(event)">
+      <div class="modal">
+        <h3>${editingId ? 'Edit contact' : 'Add new contact'}</h3>
+        <div class="modal-err" id="modal-err"></div>
+        <div class="form-grid">
+          <div class="field"><label>First name</label><input id="mf-first" value="${escHtml(c['First Name']||'')}" placeholder="First name"></div>
+          <div class="field"><label>Last name</label><input id="mf-last" value="${escHtml(c['Last Name']||'')}" placeholder="Last name"></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label>Company</label><input id="mf-company" value="${escHtml(c['Company']||'')}" placeholder="Company name"></div>
+          <div class="field"><label>Role / department</label><input id="mf-role" value="${escHtml(c['Department/Position']||'')}" placeholder="Job title"></div>
+        </div>
+        <div class="field"><label>Email address</label><input id="mf-email" type="email" value="${escHtml(c['Email Address']||'')}" placeholder="email@company.com"></div>
+        <div class="form-grid">
+          <div class="field"><label>Phone</label><input id="mf-phone" value="${escHtml(c['Contact Number']||'')}" placeholder="+44..."></div>
+          <div class="field"><label>Lead type</label>
+            <select id="mf-lead">
+              <option value="">— Select —</option>
+              <option value="Warm" ${c['Lead Type']==='Warm'?'selected':''}>Warm</option>
+              <option value="Cold" ${c['Lead Type']==='Cold'?'selected':''}>Cold</option>
+              <option value="Needs a Call" ${c['Lead Type']==='Needs a Call'?'selected':''}>Needs a Call</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label>LinkedIn URL</label><input id="mf-li" value="${escHtml(c['Linkedin Link']||'')}" placeholder="https://linkedin.com/in/..."></div>
+        <div class="modal-actions">
+          <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-cyan" onclick="saveContact()">Save contact</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function overlayClick(e) { if (e.target.id === 'overlay') closeModal(); }
+function closeModal() { document.getElementById('modal-area').innerHTML = ''; editingId = null; }
+
+async function saveContact() {
+  const first = document.getElementById('mf-first').value.trim();
+  const last = document.getElementById('mf-last').value.trim();
+  if (!first && !last) {
+    const err = document.getElementById('modal-err');
+    err.textContent = 'Please enter at least a first or last name.';
+    err.style.display = 'block';
+    return;
+  }
+  const record = {
+    'Company': document.getElementById('mf-company').value.trim(),
+    'Last Name': last,
+    'First Name': first,
+    'Middle Name': '',
+    'Department/Position': document.getElementById('mf-role').value.trim(),
+    'Contact Number': document.getElementById('mf-phone').value.trim(),
+    'Contact Number 2': '',
+    'Contact Number 3': '',
+    'Email Address': document.getElementById('mf-email').value.trim(),
+    'Linkedin Link': document.getElementById('mf-li').value.trim(),
+    'Last Touch': '',
+    'Lead Type': document.getElementById('mf-lead').value
+  };
+  try {
+    const body = editingId
+      ? { action: 'update', id: editingId, record }
+      : { action: 'add', record };
+    const res = await fetch(API, { method: 'POST', body: JSON.stringify(body) });
+    const result = await res.json();
+    if (result.error) throw new Error(result.error);
+    closeModal();
+    await loadData();
+  } catch(e) {
+    const err = document.getElementById('modal-err');
+    err.textContent = 'Save failed: ' + e.message;
+    err.style.display = 'block';
+  }
+}
+
+async function deleteContact(id, name) {
+  if (!confirm('Delete ' + name + '?\n\nThis will permanently remove them from the Google Sheet.')) return;
+  try {
+    const res = await fetch(API, { method: 'POST', body: JSON.stringify({ action: 'delete', id }) });
+    const result = await res.json();
+    if (result.error) throw new Error(result.error);
+    await loadData();
+  } catch(e) {
+    alert('Delete failed: ' + e.message);
+  }
+}
+
+loadData();
+</script>
+</body>
+</html>
