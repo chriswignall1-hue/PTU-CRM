@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pure Transfer University — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:  #0d1f3c;
+      --cyan:  #00aeef;
+      --yellow:#f5c400;
+      --white: #ffffff;
+      --light: #e8f4fb;
+      --err:   #e53935;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--navy);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Subtle animated background */
+    body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(0,174,239,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(245,196,0,0.07) 0%, transparent 50%);
+      animation: bgPulse 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgPulse {
+      from { opacity: 0.6; }
+      to   { opacity: 1; }
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(0,174,239,0.2);
+      border-radius: 16px;
+      padding: 48px 44px;
+      width: 100%;
+      max-width: 420px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,174,239,0.08);
+      animation: cardIn 0.5s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(24px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .logo-area {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .logo-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      background: var(--cyan);
+      border-radius: 14px;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(0,174,239,0.35);
+    }
+
+    .logo-area h1 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.3px;
+      line-height: 1.3;
+    }
+
+    .logo-area p {
+      font-size: 12px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.45);
+      margin-top: 4px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .divider {
+      height: 1px;
+      background: rgba(0,174,239,0.15);
+      margin-bottom: 32px;
+    }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .input-wrap {
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(0,174,239,0.25);
+      border-radius: 10px;
+      padding: 14px 48px 14px 16px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      color: var(--white);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="password"]::placeholder { color: rgba(255,255,255,0.2); }
+
+    input[type="password"]:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0,174,239,0.15);
+    }
+
+    .toggle-pw {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: rgba(255,255,255,0.35);
+      padding: 4px;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .toggle-pw:hover { color: var(--cyan); }
+
+    .error-msg {
+      display: none;
+      align-items: center;
+      gap: 8px;
+      background: rgba(229,57,53,0.12);
+      border: 1px solid rgba(229,57,53,0.3);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #ff6b6b;
+      margin-bottom: 20px;
+      animation: shake 0.35s cubic-bezier(0.36,0.07,0.19,0.97);
+    }
+    .error-msg.visible { display: flex; }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%      { transform: translateX(-6px); }
+      40%      { transform: translateX(6px); }
+      60%      { transform: translateX(-4px); }
+      80%      { transform: translateX(4px); }
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 15px;
+      background: var(--cyan);
+      color: var(--navy);
+      border: none;
+      border-radius: 10px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 6px 20px rgba(0,174,239,0.3);
+    }
+
+    button[type="submit"]:hover {
+      background: #00c4ff;
+      box-shadow: 0 8px 28px rgba(0,174,239,0.45);
+      transform: translateY(-1px);
+    }
+
+    button[type="submit"]:active { transform: translateY(0); }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 28px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 0.3px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <div class="logo-area">
+      <div class="logo-badge">PT</div>
+      <h1>Pure Transfer University</h1>
+      <p>North East Project — CRM</p>
+    </div>
+    <div class="divider"></div>
+
+    <label for="password">Password</label>
+    <div class="input-wrap">
+      <input type="password" id="password" placeholder="Enter password" autocomplete="current-password" />
+      <button type="button" class="toggle-pw" id="toggleBtn" aria-label="Show password">
+        <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="error-msg" id="errorMsg">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Incorrect password. Please try again.
+    </div>
+
+    <button type="submit" id="loginBtn">Access CRM</button>
+
+    <p class="footer-note">Authorised access only — Pure Transfer Ltd</p>
+  </div>
+
+  <script>
+    const CORRECT_HASH = 'f6ec66ba7d12ab5a55be896738e3b0eb533401e823a3d62e77f1122ce61f9855';
+    const SESSION_KEY  = 'ptu_crm_auth';
+    const CRM_PAGE     = 'ptu-crm.html';
+
+    // If already authenticated, skip login
+    if (sessionStorage.getItem(SESSION_KEY) === 'granted') {
+      window.location.href = CRM_PAGE;
+    }
+
+    async function sha256(str) {
+      const buf  = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const pw    = document.getElementById('password').value;
+      const error = document.getElementById('errorMsg');
+      error.classList.remove('visible');
+
+      if (!pw) { error.classList.add('visible'); return; }
+
+      const hash = await sha256(pw);
+      if (hash === CORRECT_HASH) {
+        sessionStorage.setItem(SESSION_KEY, 'granted');
+        window.location.href = CRM_PAGE;
+      } else {
+        error.classList.add('visible');
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+      }
+    });
+
+    document.getElementById('password').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('loginBtn').click();
+    });
+
+    // Toggle show/hide password
+    document.getElementById('toggleBtn').addEventListener('click', () => {
+      const input = document.getElementById('password');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    });
+  </script>
+</body>
+</html>
