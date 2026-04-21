@@ -98,4 +98,106 @@ tr.due-soon td{background:rgba(0,180,216,0.05);}
 .li-link{color:var(--cyan);font-size:12px;text-decoration:none;}
 .li-link:hover{text-decoration:underline;}
 .empty{text-align:center;padding:40px;color:rgba(255,255,255,0.25);font-size:13px;}
-.reminders-banner{background:rgba(231,76,60,0.1);border:0.5px solid rgba(231,76,60,0.3);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;
+.reminders-banner{background:rgba(231,76,60,0.1);border:0.5px solid rgba(231,76,60,0.3);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.reminders-banner span{font-size:13px;color:#e74c3c;}
+.reminders-banner button{font-size:12px;padding:5px 12px;border-radius:6px;background:rgba(231,76,60,0.2);border:0.5px solid rgba(231,76,60,0.4);color:#e74c3c;cursor:pointer;font-family:'Poppins',sans-serif;}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="logo">
+    <div class="logo-mark">PT</div>
+    <div>
+      <div class="logo-text">Pure Transfer University</div>
+      <div class="logo-sub">CRM — North East Project</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span id="sync-status"></span>
+    <button class="btn btn-cyan" onclick="openModal()">+ Add contact</button>
+  </div>
+</div>
+<div class="body">
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Total contacts</div><div class="stat-value" id="s-total">—</div></div>
+    <div class="stat"><div class="stat-label">Contacted</div><div class="stat-value cyan" id="s-contacted">—</div></div>
+    <div class="stat"><div class="stat-label">Warm leads</div><div class="stat-value cyan" id="s-warm">—</div></div>
+    <div class="stat"><div class="stat-label">Reminders due</div><div class="stat-value yellow" id="s-reminders">—</div></div>
+  </div>
+  <div id="reminders-banner"></div>
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search" placeholder="Search by name, company, email, role..." oninput="onFilter()">
+    </div>
+    <select id="f-sheet" onchange="onFilter()">
+      <option value="">All companies</option>
+      <option value="Piramal">Piramal</option>
+      <option value="Recipharm">Recipharm</option>
+      <option value="Quorn Foods">Quorn Foods</option>
+      <option value="Fujifilm">Fujifilm</option>
+      <option value="Sterling Pharma">Sterling Pharma</option>
+      <option value="Thermo Fisher">Thermo Fisher</option>
+      <option value="GlaxoSmithKilne">GlaxoSmithKilne</option>
+    </select>
+    <select id="f-contacted" onchange="onFilter()">
+      <option value="">All contacts</option>
+      <option value="Yes">Contacted</option>
+      <option value="No">Not contacted</option>
+    </select>
+    <select id="f-lead" onchange="onFilter()">
+      <option value="">All lead types</option>
+      <option value="Warm">Warm</option>
+      <option value="Cold">Cold</option>
+      <option value="Needs a Call">Needs a Call</option>
+    </select>
+    <select id="f-reminder" onchange="onFilter()">
+      <option value="">All reminders</option>
+      <option value="overdue">Overdue</option>
+      <option value="today">Due today</option>
+      <option value="soon">Due this week</option>
+      <option value="has">Has reminder</option>
+    </select>
+    <button class="btn btn-ghost" onclick="loadData()">&#8635; Refresh</button>
+  </div>
+  <div id="main-content">
+    <div class="loading"><div class="spinner"></div>Loading contacts from Google Sheets...</div>
+  </div>
+</div>
+<div id="modal-area"></div>
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbw26HFA_-psFqt3hEIAitRmDj2AHTTzJJEaxsSmtJsGTFTWjby9rekbZicFx3RKysjQ/exec';
+const PER_PAGE = 50;
+const SHEETS = ['Piramal','Recipharm','Quorn Foods','Fujifilm','Sterling Pharma','Thermo Fisher','GlaxoSmithKilne'];
+let allContacts = [];
+let filtered = [];
+let page = 1;
+let editingId = null;
+let editingSheet = null;
+function today(){return new Date().toISOString().split('T')[0];}
+function reminderStatus(d){if(!d)return null;const t=today();const diff=Math.round((new Date(d)-new Date(t))/(1000*60*60*24));if(diff<0)return'overdue';if(diff===0)return'today';if(diff<=7)return'soon';return'upcoming';}
+function reminderBadge(d){if(!d)return'<span style="color:rgba(255,255,255,0.2);font-size:12px;">—</span>';const s=reminderStatus(d);const dt=new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});const cls={overdue:'badge-overdue',today:'badge-today',soon:'badge-soon',upcoming:'badge-upcoming'}[s];const lbl={overdue:'⚠ ',today:'● ',soon:'',upcoming:''}[s];return`<span class="badge ${cls}">${lbl}${dt}</span>`;}
+async function loadData(){document.getElementById('sync-status').textContent='Syncing...';document.getElementById('main-content').innerHTML='<div class="loading"><div class="spinner"></div>Loading contacts...</div>';try{const res=await fetch(API+'?action=getAll');const data=await res.json();if(data.error)throw new Error(data.error);allContacts=data;updateStats();renderBanner();page=1;render();document.getElementById('sync-status').textContent='Synced '+new Date().toLocaleTimeString();}catch(e){document.getElementById('main-content').innerHTML=`<div class="error-box">Could not connect to Google Sheets. Try refreshing.<br><br><small>${e.message}</small></div>`;document.getElementById('sync-status').textContent='Connection error';}}
+function updateStats(){document.getElementById('s-total').textContent=allContacts.length.toLocaleString();document.getElementById('s-contacted').textContent=allContacts.filter(c=>String(c['Contacted']).toLowerCase()==='yes').length.toLocaleString();document.getElementById('s-warm').textContent=allContacts.filter(c=>c['Lead Type']==='Warm').length.toLocaleString();const due=allContacts.filter(c=>{const s=reminderStatus(c['Reminder Date']);return s==='overdue'||s==='today';}).length;document.getElementById('s-reminders').textContent=due.toLocaleString();}
+function renderBanner(){const ov=allContacts.filter(c=>reminderStatus(c['Reminder Date'])==='overdue');const td=allContacts.filter(c=>reminderStatus(c['Reminder Date'])==='today');const b=document.getElementById('reminders-banner');if(!ov.length&&!td.length){b.innerHTML='';return;}let msg=[];if(ov.length)msg.push(`${ov.length} overdue reminder${ov.length>1?'s':''}`);if(td.length)msg.push(`${td.length} due today`);b.innerHTML=`<div class="reminders-banner"><span>⚠ You have ${msg.join(' and ')}</span><button onclick="filterOverdue()">View reminders</button></div>`;}
+function filterOverdue(){document.getElementById('f-reminder').value='overdue';onFilter();}
+function onFilter(){page=1;render();}
+function getFiltered(){const q=document.getElementById('search').value.toLowerCase();const fs=document.getElementById('f-sheet').value;const fl=document.getElementById('f-lead').value;const fc=document.getElementById('f-contacted').value;const fr=document.getElementById('f-reminder').value;return allContacts.filter(c=>{if(q){const h=[c['First Name'],c['Last Name'],c['Company'],c['Email Address'],c['Department/Position']].join(' ').toLowerCase();if(!h.includes(q))return false;}if(fs&&c._sheet!==fs)return false;if(fl&&c['Lead Type']!==fl)return false;if(fc&&String(c['Contacted']).toLowerCase()!==fc.toLowerCase())return false;if(fr){const s=reminderStatus(c['Reminder Date']);if(fr==='has'&&!c['Reminder Date'])return false;if(fr==='overdue'&&s!=='overdue')return false;if(fr==='today'&&s!=='today')return false;if(fr==='soon'&&s!=='soon'&&s!=='today')return false;}return true;});}
+function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function initials(c){return((c['First Name']||'')[0]||(c['Last Name']||'')[0]||'?').toUpperCase()+((c['Last Name']||'')[0]||'').toUpperCase();}
+function badgeHtml(lt){if(!lt)return'<span class="badge badge-none">—</span>';if(lt==='Warm')return'<span class="badge badge-warm">Warm</span>';if(lt==='Cold')return'<span class="badge badge-cold">Cold</span>';if(lt==='Needs a Call')return'<span class="badge badge-call">Needs a Call</span>';return`<span class="badge badge-none">${escHtml(lt)}</span>`;}
+function contactedBadge(v){return String(v||'').toLowerCase()==='yes'?'<span class="badge badge-yes">Yes</span>':'<span class="badge badge-no">No</span>';}
+function rowClass(c){const s=reminderStatus(c['Reminder Date']);if(s==='overdue')return'overdue';if(s==='today')return'due-today';if(s==='soon')return'due-soon';return'';}
+function render(){filtered=getFiltered();const total=filtered.length;const totalPages=Math.max(1,Math.ceil(total/PER_PAGE));if(page>totalPages)page=1;const slice=filtered.slice((page-1)*PER_PAGE,page*PER_PAGE);let html='<div class="table-wrap"><table><thead><tr><th>Name</th><th>Company</th><th>Role</th><th>Email</th><th>Lead type</th><th>Contacted</th><th>Reminder</th><th>Notes</th><th>Sheet</th><th>Actions</th></tr></thead><tbody>';if(!slice.length){html+='<tr><td colspan="10"><div class="empty">No contacts match your search</div></td></tr>';}else{slice.forEach(c=>{const name=[c['First Name'],c['Last Name']].filter(Boolean).join(' ')||'—';const notes=c['Notes']?`<span title="${escHtml(c['Notes'])}">${escHtml(c['Notes'])}</span>`:'<span style="color:rgba(255,255,255,0.2);">—</span>';html+=`<tr class="${rowClass(c)}"><td><div class="name-cell"><div class="av">${initials(c)}</div><span title="${escHtml(name)}">${escHtml(name)}</span></div></td><td title="${escHtml(c['Company']||'')}">${escHtml(c['Company']||'—')}</td><td title="${escHtml(c['Department/Position']||'')}">${escHtml(c['Department/Position']||'—')}</td><td title="${escHtml(c['Email Address']||'')}" style="color:${c['Email Address']?'#00b4d8':'rgba(255,255,255,0.25)'};font-size:12px;">${escHtml(c['Email Address']||'—')}</td><td>${badgeHtml(c['Lead Type'])}</td><td>${contactedBadge(c['Contacted'])}</td><td>${reminderBadge(c['Reminder Date'])}</td><td class="notes-cell">${notes}</td><td><span class="sheet-pill">${escHtml(c._sheet||'')}</span></td><td><div class="actions"><button class="act-btn" onclick="openModalWithData(${c._id},'${escHtml(c._sheet)}')">Edit</button><button class="act-btn del" onclick="deleteContact(${c._id},'${escHtml(c._sheet)}','${escHtml(name)}')">Del</button></div></td></tr>`;});}html+='</tbody></table></div>';const from=total===0?0:(page-1)*PER_PAGE+1;const to=Math.min(page*PER_PAGE,total);html+=`<div class="pagination"><span>Showing ${from}–${to} of ${total.toLocaleString()} contacts</span><div class="page-btns"><button class="page-btn" onclick="changePage(-1)" ${page===1?'disabled style="opacity:0.3;cursor:default"':''}>&#8592; Prev</button><button class="page-btn active">${page} / ${totalPages}</button><button class="page-btn" onclick="changePage(1)" ${page>=totalPages?'disabled style="opacity:0.3;cursor:default"':''}>Next &#8594;</button></div></div>`;document.getElementById('main-content').innerHTML=html;}
+function changePage(dir){const tp=Math.ceil(filtered.length/PER_PAGE);page=Math.max(1,Math.min(page+dir,tp));render();}
+function openModalWithData(id,sheet){const c=allContacts.find(x=>x._id===id&&x._sheet===sheet);if(c)openModal(c);}
+function openModal(contact){editingId=contact?contact._id:null;editingSheet=contact?contact._sheet:null;const c=contact||{};const so=SHEETS.map(s=>`<option value="${s}" ${c._sheet===s?'selected':''}>${s}</option>`).join('');const rv=c['Reminder Date']?c['Reminder Date'].split('T')[0]:'';document.getElementById('modal-area').innerHTML=`<div class="modal-overlay" id="overlay" onclick="overlayClick(event)"><div class="modal"><h3>${editingId?'Edit contact':'Add new contact'}</h3><div class="modal-err" id="modal-err"></div><div class="form-grid"><div class="field"><label>First name</label><input id="mf-first" value="${escHtml(c['First Name']||'')}" placeholder="First name"></div><div class="field"><label>Last name</label><input id="mf-last" value="${escHtml(c['Last Name']||'')}" placeholder="Last name"></div></div><div class="form-grid"><div class="field"><label>Company</label><input id="mf-company" value="${escHtml(c['Company']||'')}" placeholder="Company name"></div><div class="field"><label>Role / department</label><input id="mf-role" value="${escHtml(c['Department/Position']||'')}" placeholder="Job title"></div></div><div class="field"><label>Email address</label><input id="mf-email" type="email" value="${escHtml(c['Email Address']||'')}" placeholder="email@company.com"></div><div class="form-grid"><div class="field"><label>Phone</label><input id="mf-phone" value="${escHtml(c['Contact Number']||'')}" placeholder="+44..."></div><div class="field"><label>Lead type</label><select id="mf-lead"><option value="">— Select —</option><option value="Warm" ${c['Lead Type']==='Warm'?'selected':''}>Warm</option><option value="Cold" ${c['Lead Type']==='Cold'?'selected':''}>Cold</option><option value="Needs a Call" ${c['Lead Type']==='Needs a Call'?'selected':''}>Needs a Call</option></select></div></div><div class="form-grid"><div class="field"><label>Contacted</label><select id="mf-contacted"><option value="No" ${String(c['Contacted']||'').toLowerCase()!=='yes'?'selected':''}>No</option><option value="Yes" ${String(c['Contacted']||'').toLowerCase()==='yes'?'selected':''}>Yes</option></select></div><div class="field"><label>Reminder date</label><input id="mf-reminder" type="date" value="${escHtml(rv)}" min="${today()}"></div></div><div class="form-grid"><div class="field"><label>Sheet</label><select id="mf-sheet">${so}</select></div><div class="field"><label>LinkedIn URL</label><input id="mf-li" value="${escHtml(c['Linkedin Link']||'')}" placeholder="https://linkedin.com/in/..."></div></div><div class="field"><label>Notes</label><textarea id="mf-notes" placeholder="Add any notes...">${escHtml(c['Notes']||'')}</textarea></div><div class="modal-actions">${rv?'<button class="btn btn-ghost" onclick="clearReminder()">Clear reminder</button>':''}<button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-cyan" onclick="saveContact()">Save contact</button></div></div></div>`;}
+function clearReminder(){document.getElementById('mf-reminder').value='';}
+function overlayClick(e){if(e.target.id==='overlay')closeModal();}
+function closeModal(){document.getElementById('modal-area').innerHTML='';editingId=null;editingSheet=null;}
+async function saveContact(){const first=document.getElementById('mf-first').value.trim();const last=document.getElementById('mf-last').value.trim();if(!first&&!last){const err=document.getElementById('modal-err');err.textContent='Please enter at least a first or last name.';err.style.display='block';return;}const sheet=document.getElementById('mf-sheet').value;const record={'Company':document.getElementById('mf-company').value.trim(),'Last Name':last,'First Name':first,'Middle Name':'','Department/Position':document.getElementById('mf-role').value.trim(),'Contact Number':document.getElementById('mf-phone').value.trim(),'Contact Number 2':'','Contact Number 3':'','Email Address':document.getElementById('mf-email').value.trim(),'Linkedin Link':document.getElementById('mf-li').value.trim(),'Last Touch':'','Lead Type':document.getElementById('mf-lead').value,'Contacted':document.getElementById('mf-contacted').value,'Notes':document.getElementById('mf-notes').value.trim(),'Reminder Date':document.getElementById('mf-reminder').value};try{const body=editingId?{action:'update',id:editingId,sheet:editingSheet,record}:{action:'add',sheet,record};const res=await fetch(API,{method:'POST',body:JSON.stringify(body)});const result=await res.json();if(result.error)throw new Error(result.error);closeModal();await loadData();}catch(e){const err=document.getElementById('modal-err');err.textContent='Save failed: '+e.message;err.style.display='block';}}
+async function deleteContact(id,sheet,name){if(!confirm('Delete '+name+'?\n\nThis will permanently remove them from the Google Sheet.'))return;try{const res=await fetch(API,{method:'POST',body:JSON.stringify({action:'delete',id,sheet})});const result=await res.json();if(result.error)throw new Error(result.error);await loadData();}catch(e){alert('Delete failed: '+e.message);}}
+loadData();
+</script>
+</body>
+</html>
