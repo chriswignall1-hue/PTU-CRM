@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+/* ── Reset & base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 10.5pt; }
+body {
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  color: #1A1A2E;
+  background: #ffffff;
+  line-height: 1.5;
+}
+
+/* ── Page ── */
+@page {
+  size: A4;
+  margin: 0;
+}
+
+/* ── Colours ── */
+:root {
+  --orange: #E8501A;
+  --orange-dark: #C43F10;
+  --navy: #1A1A2E;
+  --grey: #6B7280;
+  --light-grey: #F5F5F7;
+  --border: #E2E2E6;
+  --white: #ffffff;
+  --orange-light: #FFF0EB;
+}
+
+/* ── Hero ── */
+.hero {
+  background: linear-gradient(135deg, #E8501A 0%, #C43F10 100%);
+  color: #fff;
+  padding: 44px 48px 38px;
+  page-break-inside: avoid;
+}
+.hero-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.hero-logo-mark {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.22);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; font-weight: 900; color: #fff;
+  flex-shrink: 0;
+}
+.hero-logo-text { font-size: 20px; font-weight: 800; color: #fff; line-height: 1.2; }
+.hero-logo-sub  { font-size: 11px; color: rgba(255,255,255,0.75); }
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 100px;
+  padding: 4px 14px;
+  font-size: 10pt;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+.hero h1 {
+  font-size: 30pt;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 12px;
+  color: #fff;
+}
+.hero p {
+  font-size: 12pt;
+  color: rgba(255,255,255,0.88);
+  max-width: 500px;
+  line-height: 1.6;
+}
+
+/* ── Stats strip ── */
+.stats-strip {
+  background: var(--navy);
+  display: flex;
+  justify-content: space-around;
+  padding: 22px 48px;
+  page-break-inside: avoid;
+}
+.stat-item { text-align: center; color: #fff; }
+.stat-val { font-size: 26pt; font-weight: 900; color: var(--orange); line-height: 1; }
+.stat-label { font-size: 9pt; color: rgba(255,255,255,0.65); margin-top: 4px; }
+
+/* ── Page body ── */
+.body { padding: 0 48px; }
+
+/* ── Section ── */
+.section { padding: 28px 0 22px; border-bottom: 1px solid var(--border); page-break-inside: avoid; }
+.section:last-of-type { border-bottom: none; }
+.section-title { font-size: 16pt; font-weight: 800; margin-bottom: 3px; color: var(--navy); }
+.section-sub   { font-size: 10pt; color: var(--grey); margin-bottom: 18px; }
+
+/* ── 7-step flow ── */
+.flow-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.flow-card {
+  background: var(--light-grey);
+  border-radius: 10px;
+  padding: 14px 12px;
+  position: relative;
+}
+.flow-num {
+  position: absolute;
+  top: -8px; left: 10px;
+  background: var(--orange);
+  color: #fff;
+  font-size: 9pt; font-weight: 800;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.flow-icon  { font-size: 20px; margin-bottom: 7px; }
+.flow-title { font-size: 10pt; font-weight: 700; margin-bottom: 4px; color: var(--navy); }
+.flow-desc  { font-size: 8.5pt; color: var(--grey); line-height: 1.4; }
+
+/* ── Services ── */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.service-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 12px;
+  text-align: center;
+}
+.service-icon  { font-size: 26px; margin-bottom: 8px; }
+.service-name  { font-size: 10pt; font-weight: 700; margin-bottom: 5px; color: var(--navy); }
+.service-price { font-size: 9.5pt; font-weight: 700; color: var(--orange); }
+
+/* ── Connection diagram ── */
+.connect {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  background: var(--light-grey);
+  border-radius: 12px;
+  padding: 24px 16px;
+}
+.cn-node { text-align: center; flex: 1; padding: 0 8px; }
+.cn-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  background: var(--orange-light);
+  font-size: 24px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 10px;
+}
+.cn-title { font-size: 10.5pt; font-weight: 700; margin-bottom: 3px; color: var(--navy); }
+.cn-desc  { font-size: 8.5pt; color: var(--grey); line-height: 1.4; }
+.cn-arrow { font-size: 20pt; color: var(--orange); font-weight: 900; padding: 0 8px; flex-shrink: 0; }
+
+/* ── Features ── */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.feature-card {
+  background: var(--light-grey);
+  border-radius: 10px;
+  padding: 14px 13px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.feat-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  background: var(--orange-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.feat-title { font-size: 10pt; font-weight: 700; margin-bottom: 3px; color: var(--navy); }
+.feat-desc  { font-size: 8.5pt; color: var(--grey); line-height: 1.4; }
+
+/* ── Next steps ── */
+.steps { display: flex; flex-direction: column; gap: 0; }
+.step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+.step:last-child { border-bottom: none; }
+.step-num {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--orange);
+  color: #fff;
+  font-size: 12pt; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.step-title { font-size: 11pt; font-weight: 700; margin-bottom: 3px; color: var(--navy); }
+.step-desc  { font-size: 9pt; color: var(--grey); line-height: 1.5; }
+.step-cost {
+  display: inline-block;
+  margin-top: 6px;
+  background: var(--orange-light);
+  color: var(--orange);
+  font-size: 8.5pt; font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+
+/* ── Store badges ── */
+.stores {
+  display: flex;
+  gap: 14px;
+  margin-top: 18px;
+}
+.store-badge {
+  background: var(--navy);
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11pt; font-weight: 700;
+}
+.store-badge .s-icon { font-size: 20px; }
+.store-badge .s-sub  { font-size: 8pt; font-weight: 400; opacity: 0.65; }
+
+/* ── Footer ── */
+.footer {
+  background: var(--navy);
+  color: rgba(255,255,255,0.6);
+  text-align: center;
+  padding: 20px 48px;
+  font-size: 9pt;
+  margin-top: 4px;
+}
+.footer strong { color: #fff; }
+
+/* ── Confidential watermark strip ── */
+.confidential {
+  background: var(--orange);
+  color: #fff;
+  text-align: center;
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 5px;
+  text-transform: uppercase;
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-logo-row">
+    <div class="hero-logo-mark">SG</div>
+    <div>
+      <div class="hero-logo-text">Smartech Gas</div>
+      <div class="hero-logo-sub">Gas Safe Registered Engineers · Liverpool</div>
+    </div>
+  </div>
+  <div class="hero-badge">📱 Mobile App Proposal</div>
+  <h1>Your Own Booking App<br>on iOS &amp; Android</h1>
+  <p>Customers book directly from their phone. Every booking goes straight into your existing Bookly system and Google Calendar — automatically, with no extra work from you.</p>
+</div>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-val">7</div>
+    <div class="stat-label">Screens built &amp; ready</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val">4</div>
+    <div class="stat-label">Services bookable</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val">2</div>
+    <div class="stat-label">Stores — App Store &amp; Google Play</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-val">1</div>
+    <div class="stat-label">Shared database with your website</div>
+  </div>
+</div>
+
+<div class="body">
+
+  <!-- BOOKING FLOW -->
+  <div class="section">
+    <div class="section-title">How Customers Book</div>
+    <div class="section-sub">A clean 7-step journey — takes under 2 minutes to complete.</div>
+    <div class="flow-grid">
+      <div class="flow-card">
+        <div class="flow-num">1</div>
+        <div class="flow-icon">🏠</div>
+        <div class="flow-title">Welcome Screen</div>
+        <div class="flow-desc">Branded home screen with your logo and a clear "Book Now" button.</div>
+      </div>
+      <div class="flow-card">
+        <div class="flow-num">2</div>
+        <div class="flow-icon">🔧</div>
+        <div class="flow-title">Select Service</div>
+        <div class="flow-desc">Customer picks from your 4 services, each showing price and duration.</div>
+      </div>
+      <div class="flow-card">
+        <div class="flow-num">3</div>
+        <div class="flow-icon">📅</div>
+        <div class="flow-title">Pick a Date</div>
+        <div class="flow-desc">Calendar shows only the days you actually have availability.</div>
+      </div>
+      <div class="flow-card">
+        <div class="flow-num">4</div>
+        <div class="flow-icon">🕐</div>
+        <div class="flow-title">Choose a Time</div>
+        <div class="flow-desc">Available time slots shown as a simple one-tap grid.</div>
+      </div>
+      <div class="flow-card">
+        <div class="flow-num">5</div>
+        <div class="flow-icon">👤</div>
+        <div class="flow-title">Enter Details</div>
+        <div class="flow-desc">Name, email, phone, property address, and notes for the engineer.</div>
+      </div>
+      <div class="flow-card">
+        <div class="flow-num">6</div>
+        <div class="flow-icon">✅</div>
+        <div class="flow-title">Review &amp; Confirm</div>
+        <div class="flow-desc">Full summary shown — customer can edit before submitting.</div>
+      </div>
+      <div class="flow-card">
+        <div class="flow-num">7</div>
+        <div class="flow-icon">🎉</div>
+        <div class="flow-title">Confirmed</div>
+        <div class="flow-desc">Booking reference shown instantly. Confirmation email sent automatically.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <div class="section">
+    <div class="section-title">Services Available to Book</div>
+    <div class="section-sub">All four of your current services are built in and ready to go.</div>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">🔥</div>
+        <div class="service-name">Boiler Service</div>
+        <div class="service-price">From £75</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🛡️</div>
+        <div class="service-name">Gas Safety Certificate</div>
+        <div class="service-price">From £65</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🔧</div>
+        <div class="service-name">Boiler Repair</div>
+        <div class="service-price">From £85</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">⚙️</div>
+        <div class="service-name">Boiler Installation</div>
+        <div class="service-price">Quote required</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT CONNECTS -->
+  <div class="section">
+    <div class="section-title">One System — Every Channel</div>
+    <div class="section-sub">The app talks directly to the same database as your website. Nothing changes behind the scenes.</div>
+    <div class="connect">
+      <div class="cn-node">
+        <div class="cn-icon">📱</div>
+        <div class="cn-title">The App</div>
+        <div class="cn-desc">Customer books on iPhone or Android</div>
+      </div>
+      <div class="cn-arrow">→</div>
+      <div class="cn-node">
+        <div class="cn-icon">🗄️</div>
+        <div class="cn-title">Bookly Database</div>
+        <div class="cn-desc">Same database your website already uses — no duplication</div>
+      </div>
+      <div class="cn-arrow">→</div>
+      <div class="cn-node">
+        <div class="cn-icon">📆</div>
+        <div class="cn-title">Google Calendar</div>
+        <div class="cn-desc">Appointment added automatically — no manual entry needed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY FEATURES -->
+  <div class="section">
+    <div class="section-title">Key Features</div>
+    <div class="section-sub">Built to the same standard as apps from national service companies.</div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feat-icon">🔄</div>
+        <div>
+          <div class="feat-title">Live Availability</div>
+          <div class="feat-desc">Calendar only shows dates and times you genuinely have free — no double bookings.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon">📆</div>
+        <div>
+          <div class="feat-title">Automatic Calendar Sync</div>
+          <div class="feat-desc">Every booking goes straight into your Google Calendar. Nothing to do manually.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon">📧</div>
+        <div>
+          <div class="feat-title">Confirmation Emails</div>
+          <div class="feat-desc">Customers receive a confirmation email automatically — handled by your existing Bookly setup.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon">✅</div>
+        <div>
+          <div class="feat-title">Smart Validation</div>
+          <div class="feat-desc">UK postcode, phone, and email are validated before submission — no bad data.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon">🌐</div>
+        <div>
+          <div class="feat-title">Same Website Database</div>
+          <div class="feat-desc">Website and app bookings appear in the same place. One view of everything.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feat-icon">📤</div>
+        <div>
+          <div class="feat-title">Share Booking</div>
+          <div class="feat-desc">Customers can share their booking reference via WhatsApp, email, or text.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEXT STEPS -->
+  <div class="section">
+    <div class="section-title">What Happens Next</div>
+    <div class="section-sub">Four simple steps from here to live on both stores.</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <div class="step-title">Activate the Bookly API Addon</div>
+          <div class="step-desc">Purchase and install one small addon on your existing WordPress site. This is what lets the app talk to your Bookly database. We handle the full installation and setup for you.</div>
+          <span class="step-cost">~£60 one-time · CodeCanyon</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <div class="step-title">Register as an Apple Developer</div>
+          <div class="step-desc">Required to publish on the Apple App Store. Simple online enrolment via developer.apple.com — takes around 15 minutes.</div>
+          <span class="step-cost">£79 per year</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <div class="step-title">Register on Google Play Console</div>
+          <div class="step-desc">Required to publish on the Android Google Play Store. One-time registration at play.google.com/console.</div>
+          <span class="step-cost">£20 one-time</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <div class="step-title">Submit to Both Stores</div>
+          <div class="step-desc">App icons, screenshots, and store listings are prepared and submitted on your behalf. Apple typically reviews in 1–3 days; Google Play in 1–2 days.</div>
+          <span class="step-cost">Included in development</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stores">
+      <div class="store-badge">
+        <div class="s-icon">🍎</div>
+        <div>
+          <div class="s-sub">Download on the</div>
+          App Store
+        </div>
+      </div>
+      <div class="store-badge">
+        <div class="s-icon">▶</div>
+        <div>
+          <div class="s-sub">Get it on</div>
+          Google Play
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /body -->
+
+<div class="footer">
+  <strong>Smartech Gas Ltd</strong> &nbsp;·&nbsp; Gas Safe Registered Engineers &nbsp;·&nbsp; Liverpool &nbsp;·&nbsp; smartechgas.co.uk<br>
+  <span style="margin-top:4px;display:block;">info@smartechgas.co.uk</span>
+</div>
+<div class="confidential">Confidential — prepared for Smartech Gas Ltd</div>
+
+</body>
+</html>
