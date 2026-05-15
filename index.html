@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vigorous Marketing – Graphic Design & Creative Digital Marketing</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:  #8dc63f;
+      --dark:   #1e1e1e;
+      --darker: #141414;
+      --mid:    #2a2a2a;
+      --white:  #ffffff;
+      --text:   #333333;
+      --light:  #f5f5f5;
+    }
+
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: var(--text); line-height: 1.6; }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      background: var(--darker);
+      padding: 8px 40px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+    .topbar a { color: var(--green); text-decoration: none; font-size: 0.9rem; }
+    .topbar a:hover { text-decoration: underline; }
+    .topbar svg { margin-right: 6px; vertical-align: middle; }
+
+    /* ── NAV ── */
+    nav {
+      background: var(--dark);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-box {
+      background: var(--green);
+      color: var(--dark);
+      font-weight: 900;
+      font-size: 1.4rem;
+      padding: 6px 10px;
+      letter-spacing: 1px;
+    }
+    .logo-text { color: var(--white); font-size: 0.75rem; font-weight: 600; line-height: 1.3; text-transform: uppercase; letter-spacing: 1px; }
+    nav ul { list-style: none; display: flex; gap: 28px; }
+    nav ul a { color: var(--white); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    nav ul a:hover, nav ul a.active { color: var(--green); }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--dark);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 40px;
+      padding: 70px 80px;
+      min-height: 480px;
+    }
+    .hero-img img { width: 100%; max-width: 380px; border-radius: 8px; }
+    .hero-content h1 { color: var(--white); font-size: 2.4rem; font-weight: 800; line-height: 1.2; margin-bottom: 18px; }
+    .hero-content h1 span { color: var(--green); }
+    .hero-content p { color: #ccc; font-size: 1.05rem; margin-bottom: 22px; }
+    .hero-tagline { color: var(--green); font-size: 1.2rem; font-weight: 700; }
+    .hero-tagline span { color: var(--white); }
+    .hero-cta {
+      display: inline-block;
+      margin-top: 28px;
+      background: var(--green);
+      color: var(--dark);
+      padding: 13px 32px;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 3px;
+      font-size: 1rem;
+      transition: opacity 0.2s;
+    }
+    .hero-cta:hover { opacity: 0.85; }
+
+    /* ── SECTIONS ── */
+    .section { padding: 70px 80px; }
+    .section-alt { background: var(--light); }
+    .section-dark { background: var(--dark); color: var(--white); }
+
+    .section-label {
+      display: inline-block;
+      background: var(--green);
+      color: var(--dark);
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      padding: 4px 12px;
+      margin-bottom: 14px;
+      border-radius: 2px;
+    }
+    h2 { font-size: 2rem; font-weight: 800; margin-bottom: 16px; }
+    h2 span { color: var(--green); }
+    .section-subtitle { color: #888; font-size: 1rem; margin-bottom: 50px; text-align: center; }
+
+    /* ── ABOUT ── */
+    .about-inner { max-width: 820px; }
+    .about-inner p { margin-bottom: 16px; font-size: 1.02rem; color: #444; }
+
+    /* ── SERVICES ── */
+    .service {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      padding: 50px 0;
+      border-bottom: 1px solid #e5e5e5;
+    }
+    .service:last-child { border-bottom: none; }
+    .service.reverse { direction: rtl; }
+    .service.reverse > * { direction: ltr; }
+    .service-text h3 { font-size: 1.55rem; font-weight: 800; margin-bottom: 14px; }
+    .service-text p { color: #555; font-size: 0.98rem; line-height: 1.7; }
+    .service-img img { width: 100%; border-radius: 8px; box-shadow: 0 6px 30px rgba(0,0,0,0.12); }
+    .service-icon {
+      width: 52px; height: 52px;
+      background: var(--green);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .service-icon svg { width: 28px; height: 28px; fill: var(--dark); }
+
+    /* ── AI SECTION ── */
+    .ai-section { background: var(--dark); padding: 80px; }
+    .ai-header { text-align: center; margin-bottom: 60px; }
+    .ai-header h2 { color: var(--white); }
+    .ai-header p { color: #aaa; max-width: 680px; margin: 0 auto; font-size: 1.02rem; }
+
+    .ai-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-bottom: 60px;
+    }
+    .ai-card {
+      background: var(--mid);
+      border: 1px solid #3a3a3a;
+      border-top: 3px solid var(--green);
+      padding: 32px 28px;
+      border-radius: 4px;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .ai-card:hover { transform: translateY(-4px); border-top-color: var(--green); box-shadow: 0 10px 40px rgba(141,198,63,0.15); }
+    .ai-card .card-icon {
+      width: 48px; height: 48px;
+      background: rgba(141,198,63,0.15);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+    }
+    .ai-card .card-icon svg { width: 26px; height: 26px; stroke: var(--green); fill: none; stroke-width: 1.8; }
+    .ai-card h4 { color: var(--white); font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+    .ai-card p { color: #aaa; font-size: 0.92rem; line-height: 1.65; }
+
+    .ai-process {
+      background: var(--mid);
+      border: 1px solid #3a3a3a;
+      padding: 50px;
+      border-radius: 6px;
+      margin-bottom: 50px;
+    }
+    .ai-process h3 { color: var(--white); font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; text-align: center; }
+    .ai-process .sub { color: #888; font-size: 0.9rem; text-align: center; margin-bottom: 40px; }
+    .ai-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      position: relative;
+    }
+    .ai-steps::before {
+      content: '';
+      position: absolute;
+      top: 24px;
+      left: 12.5%;
+      width: 75%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--green), rgba(141,198,63,0.3));
+    }
+    .ai-step { text-align: center; position: relative; }
+    .step-num {
+      width: 48px; height: 48px;
+      background: var(--green);
+      color: var(--dark);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900;
+      font-size: 1.1rem;
+      margin: 0 auto 14px;
+      position: relative;
+      z-index: 1;
+    }
+    .ai-step h5 { color: var(--white); font-size: 0.88rem; font-weight: 700; margin-bottom: 6px; }
+    .ai-step p { color: #888; font-size: 0.82rem; line-height: 1.5; }
+
+    .ai-cta-strip {
+      background: var(--green);
+      padding: 40px 50px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+    }
+    .ai-cta-strip h3 { color: var(--dark); font-size: 1.35rem; font-weight: 800; margin-bottom: 6px; }
+    .ai-cta-strip p { color: rgba(0,0,0,0.65); font-size: 0.95rem; }
+    .ai-cta-strip a {
+      background: var(--dark);
+      color: var(--white);
+      padding: 13px 32px;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 3px;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .ai-cta-strip a:hover { background: #111; }
+
+    /* ── VISION / MISSION ── */
+    .vm-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+    .vm-card {
+      background: var(--green);
+      padding: 40px 36px;
+      border-radius: 4px;
+    }
+    .vm-card h3 { font-size: 1.4rem; font-weight: 800; color: var(--dark); margin-bottom: 14px; }
+    .vm-card p { color: rgba(0,0,0,0.75); font-size: 0.97rem; line-height: 1.7; }
+
+    /* ── PROCESS ── */
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .p-step { text-align: center; }
+    .p-step-num {
+      background: var(--green);
+      color: var(--dark);
+      font-weight: 800;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 4px 14px;
+      display: inline-block;
+      border-radius: 2px;
+      margin-bottom: 10px;
+    }
+    .p-step h4 {
+      background: var(--green);
+      color: var(--dark);
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 10px 16px;
+      border-radius: 3px;
+      margin-bottom: 12px;
+    }
+    .p-step p { color: #555; font-size: 0.88rem; line-height: 1.55; }
+
+    /* ── CONTACT ── */
+    .contact-section {
+      background: var(--dark);
+      padding: 80px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    .contact-left h2 { color: var(--white); font-size: 3rem; font-weight: 900; line-height: 1.1; margin-bottom: 16px; }
+    .contact-left p { color: var(--green); font-size: 1.3rem; font-weight: 600; }
+    .contact-form { background: #fff; padding: 36px; border-radius: 6px; }
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      border: 1px solid #ddd;
+      padding: 11px 14px;
+      margin-bottom: 14px;
+      font-size: 0.92rem;
+      border-radius: 3px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus { outline: none; border-color: var(--green); }
+    .contact-form textarea { height: 110px; resize: vertical; }
+    .contact-form button {
+      width: 100%;
+      background: var(--dark);
+      color: var(--white);
+      border: none;
+      padding: 13px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: background 0.2s;
+    }
+    .contact-form button:hover { background: var(--green); color: var(--dark); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--darker);
+      padding: 30px 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    footer .logo-text { color: #aaa; }
+    footer p { color: #666; font-size: 0.85rem; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero, .contact-section { grid-template-columns: 1fr; padding: 50px 30px; }
+      .hero-img { order: -1; text-align: center; }
+      .section { padding: 50px 30px; }
+      .ai-section { padding: 50px 30px; }
+      .ai-grid { grid-template-columns: 1fr; }
+      .ai-steps { grid-template-columns: 1fr 1fr; }
+      .ai-steps::before { display: none; }
+      .ai-process { padding: 30px; }
+      .ai-cta-strip { flex-direction: column; text-align: center; padding: 30px; }
+      .service { grid-template-columns: 1fr; gap: 30px; direction: ltr !important; }
+      .vm-grid { grid-template-columns: 1fr; }
+      .process-steps { grid-template-columns: 1fr 1fr; }
+      nav { padding: 14px 20px; }
+      nav ul { gap: 16px; }
+      footer { flex-direction: column; gap: 10px; padding: 24px 30px; }
+    }
+    @media (max-width: 600px) {
+      .hero-content h1 { font-size: 1.8rem; }
+      h2 { font-size: 1.5rem; }
+      .process-steps { grid-template-columns: 1fr; }
+      .ai-steps { grid-template-columns: 1fr; }
+      nav ul { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <a href="mailto:hello@vigorousmarketing.co.uk">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+    hello@vigorousmarketing.co.uk
+  </a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-box">VM</div>
+    <div class="logo-text">Vigorous<br>Marketing</div>
+  </div>
+  <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#ai">AI Integration</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-img">
+    <svg viewBox="0 0 380 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px;">
+      <rect width="380" height="300" fill="#2a2a2a" rx="8"/>
+      <!-- light bulb + icons illustration placeholder -->
+      <circle cx="190" cy="130" r="72" fill="none" stroke="#8dc63f" stroke-width="3"/>
+      <ellipse cx="190" cy="195" rx="28" ry="8" fill="#8dc63f" opacity="0.3"/>
+      <path d="M190 58 v-14 M155 72 l-10-10 M225 72 l10-10 M140 130 h-14 M254 130 h14" stroke="#8dc63f" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="190" cy="130" r="44" fill="#8dc63f" opacity="0.12"/>
+      <!-- social icons -->
+      <rect x="90" y="190" width="36" height="36" rx="6" fill="#8dc63f" opacity="0.9"/>
+      <text x="108" y="214" font-size="18" text-anchor="middle" fill="#1e1e1e" font-weight="bold">f</text>
+      <rect x="140" y="210" width="32" height="32" rx="6" fill="#1da1f2" opacity="0.85"/>
+      <text x="156" y="232" font-size="15" text-anchor="middle" fill="#fff" font-weight="bold">t</text>
+      <rect x="240" y="190" width="36" height="36" rx="6" fill="#e1306c" opacity="0.85"/>
+      <circle cx="258" cy="208" r="8" fill="none" stroke="#fff" stroke-width="2"/>
+      <circle cx="263" cy="203" r="2" fill="#fff"/>
+      <rect x="200" y="215" width="28" height="28" rx="5" fill="#0077b5" opacity="0.85"/>
+      <text x="214" y="234" font-size="13" text-anchor="middle" fill="#fff" font-weight="bold">in</text>
+      <text x="190" y="137" font-size="40" text-anchor="middle" fill="#8dc63f">💡</text>
+    </svg>
+  </div>
+  <div class="hero-content">
+    <div class="section-label">Creative Agency</div>
+    <h1>Graphic Design &amp; <span>Creative</span><br>Digital Marketing</h1>
+    <p>Discover new horizons for your business with our innovative digital marketing strategies!</p>
+    <div class="hero-tagline"><span>Tailored Strategies</span> for Your<br>Brand's Growth</div>
+    <a href="#contact" class="hero-cta">Get a Free Consultation</a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="section" id="about">
+  <div class="section-label">Who We Are</div>
+  <h2>About <span>Vigorous Marketing</span> Services</h2>
+  <div class="about-inner">
+    <p>Let us be the catalyst for your company's success. Through our digital marketing services, we help businesses attract more customers and enhance brand visibility.</p>
+    <p>With over 25 years of experience in design and marketing, we bring extensive expertise to every project we undertake. Our team of seasoned professionals is committed to understanding your needs and delivering results that surpass expectations.</p>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section section-alt" id="services">
+  <div style="text-align:center;margin-bottom:50px;">
+    <div class="section-label" style="display:inline-block;">What We Do</div>
+    <h2 style="text-align:center;">Our <span>Services</span></h2>
+  </div>
+
+  <!-- Graphic Design -->
+  <div class="service">
+    <div class="service-text">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      </div>
+      <h3>Graphic Design</h3>
+      <p>Effective graphic design is crucial for creating impactful visuals and strong brand identities. That's why we believe in involving you throughout the process — not just to keep you informed, but to ensure our work aligns seamlessly with your goals and expectations.</p>
+    </div>
+    <div class="service-img">
+      <svg viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;border-radius:8px;">
+        <rect width="480" height="320" fill="#1e1e1e"/>
+        <rect x="30" y="30" width="420" height="260" rx="4" fill="#2a2a2a"/>
+        <rect x="60" y="60" width="160" height="100" rx="4" fill="#8dc63f" opacity="0.8"/>
+        <rect x="240" y="60" width="200" height="45" rx="3" fill="#3a3a3a"/>
+        <rect x="240" y="115" width="160" height="12" rx="2" fill="#4a4a4a"/>
+        <rect x="240" y="135" width="180" height="12" rx="2" fill="#4a4a4a"/>
+        <rect x="60" y="180" width="360" height="12" rx="2" fill="#3a3a3a"/>
+        <rect x="60" y="202" width="300" height="12" rx="2" fill="#3a3a3a"/>
+        <rect x="60" y="224" width="340" height="12" rx="2" fill="#3a3a3a"/>
+        <text x="140" y="118" font-size="32" text-anchor="middle" fill="#1e1e1e">🎨</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Social Media -->
+  <div class="service reverse">
+    <div class="service-text">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </div>
+      <h3>Social Media Marketing</h3>
+      <p>Social media management is a cornerstone of digital marketing for every business. We'll ensure your message reaches the right audience at the right time on the most relevant platforms.</p>
+    </div>
+    <div class="service-img">
+      <svg viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;border-radius:8px;">
+        <rect width="480" height="320" fill="#1e1e1e"/>
+        <rect x="140" y="50" width="200" height="220" rx="20" fill="#2a2a2a" stroke="#3a3a3a" stroke-width="2"/>
+        <rect x="155" y="80" width="170" height="120" rx="6" fill="#8dc63f" opacity="0.3"/>
+        <circle cx="240" cy="280" r="10" fill="#8dc63f"/>
+        <rect x="165" y="215" width="150" height="8" rx="2" fill="#3a3a3a"/>
+        <rect x="175" y="230" width="120" height="8" rx="2" fill="#3a3a3a"/>
+        <text x="240" y="148" font-size="42" text-anchor="middle">📱</text>
+        <!-- flying icons -->
+        <circle cx="80" cy="100" r="26" fill="#8dc63f" opacity="0.85"/>
+        <text x="80" y="108" font-size="20" text-anchor="middle" fill="#1e1e1e">f</text>
+        <circle cx="400" cy="140" r="26" fill="#1da1f2" opacity="0.85"/>
+        <text x="400" y="148" font-size="18" text-anchor="middle" fill="#fff">t</text>
+        <circle cx="70" cy="220" r="22" fill="#e1306c" opacity="0.85"/>
+        <text x="70" y="228" font-size="18" text-anchor="middle" fill="#fff">📷</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Website Design -->
+  <div class="service">
+    <div class="service-text">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      </div>
+      <h3>Website Design</h3>
+      <p>Even if your products and services are the best in the market, a website that lacks credibility and professionalism can leave you trailing behind your competitors. This is a significant challenge for many businesses in today's digital landscape.</p>
+    </div>
+    <div class="service-img">
+      <svg viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;border-radius:8px;">
+        <rect width="480" height="320" fill="#1e1e1e"/>
+        <rect x="30" y="30" width="420" height="260" rx="6" fill="#2a2a2a"/>
+        <rect x="30" y="30" width="420" height="32" rx="6" fill="#3a3a3a"/>
+        <circle cx="52" cy="46" r="6" fill="#ff5f57"/>
+        <circle cx="70" cy="46" r="6" fill="#febc2e"/>
+        <circle cx="88" cy="46" r="6" fill="#28c840"/>
+        <rect x="50" y="75" width="160" height="180" rx="3" fill="#3a3a3a"/>
+        <rect x="50" y="75" width="160" height="50" rx="3" fill="#8dc63f" opacity="0.7"/>
+        <rect x="225" y="75" width="200" height="55" rx="3" fill="#3a3a3a"/>
+        <rect x="225" y="140" width="200" height="12" rx="2" fill="#4a4a4a"/>
+        <rect x="225" y="160" width="160" height="12" rx="2" fill="#4a4a4a"/>
+        <rect x="225" y="180" width="180" height="12" rx="2" fill="#4a4a4a"/>
+        <rect x="225" y="210" width="80" height="28" rx="3" fill="#8dc63f"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Printing -->
+  <div class="service reverse">
+    <div class="service-text">
+      <div class="service-icon">
+        <svg viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      </div>
+      <h3>Professional Printing, Signage &amp; Display Solutions</h3>
+      <p>At Vigorous Marketing, we simplify the printing and design process, providing seamless solutions for all your business needs. With over 30 years of experience, we are dedicated to building long-term relationships and becoming your trusted, strategic partner. From concept to completion, we work closely with you at every step, managing every detail to ensure the success of your project.</p>
+    </div>
+    <div class="service-img">
+      <svg viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;border-radius:8px;">
+        <rect width="480" height="320" fill="#1e1e1e"/>
+        <!-- banner stands -->
+        <rect x="80" y="60" width="80" height="180" rx="2" fill="#2a2a2a" stroke="#8dc63f" stroke-width="2"/>
+        <rect x="82" y="62" width="76" height="176" rx="1" fill="#8dc63f" opacity="0.4"/>
+        <rect x="115" y="240" width="10" height="30" fill="#444"/>
+        <rect x="200" y="80" width="100" height="160" rx="2" fill="#2a2a2a" stroke="#8dc63f" stroke-width="2"/>
+        <rect x="202" y="82" width="96" height="156" rx="1" fill="#3a3a3a"/>
+        <rect x="245" y="240" width="10" height="30" fill="#444"/>
+        <rect x="330" y="50" width="70" height="200" rx="2" fill="#2a2a2a" stroke="#8dc63f" stroke-width="2"/>
+        <rect x="332" y="52" width="66" height="196" rx="1" fill="#8dc63f" opacity="0.25"/>
+        <rect x="360" y="250" width="10" height="20" fill="#444"/>
+        <text x="120" y="165" font-size="26" text-anchor="middle">🖨️</text>
+        <text x="250" y="168" font-size="30" text-anchor="middle">📄</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- AI INTEGRATION -->
+<section class="ai-section" id="ai">
+  <div class="ai-header">
+    <div class="section-label" style="display:inline-block;margin-bottom:16px;">New Capability</div>
+    <h2 style="color:#fff;font-size:2.2rem;margin-bottom:16px;">AI Integration in <span style="color:var(--green);">Your Projects</span></h2>
+    <p>We now combine over 25 years of creative expertise with the latest artificial intelligence tools — delivering smarter campaigns, faster results, and measurable growth for your business.</p>
+  </div>
+
+  <div class="ai-grid">
+    <div class="ai-card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <h4>AI-Powered Content Creation</h4>
+      <p>Generate high-quality, on-brand copy for social media, blogs, email campaigns, and ads — in a fraction of the time. We use AI to draft, then our team refines every word to match your voice.</p>
+    </div>
+
+    <div class="ai-card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <h4>Intelligent Analytics &amp; Insights</h4>
+      <p>AI analyses your campaign data in real time — identifying trends, audience behaviour, and opportunities you'd otherwise miss. We turn raw numbers into clear, actionable strategy.</p>
+    </div>
+
+    <div class="ai-card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/></svg>
+      </div>
+      <h4>AI-Driven Personalisation</h4>
+      <p>Deliver the right message to the right person at the right moment. AI-powered segmentation and dynamic content ensure every customer interaction feels tailored and relevant.</p>
+    </div>
+
+    <div class="ai-card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      <h4>Chatbot &amp; Automation</h4>
+      <p>Engage visitors 24/7 with intelligent chatbots that answer questions, qualify leads, and book appointments — all without lifting a finger. We build, integrate, and manage the entire system.</p>
+    </div>
+
+    <div class="ai-card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <h4>AI-Enhanced Graphic Design</h4>
+      <p>Our designers use AI image generation and enhancement tools to produce stunning visuals faster — without sacrificing creativity or brand consistency. More concepts, less turnaround time.</p>
+    </div>
+
+    <div class="ai-card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <h4>Smart Social Scheduling</h4>
+      <p>AI determines the optimal time to post on every platform based on when your audience is most engaged — maximising reach and interaction without the guesswork.</p>
+    </div>
+  </div>
+
+  <!-- AI Process -->
+  <div class="ai-process">
+    <h3>How We Integrate AI Into Your Project</h3>
+    <p class="sub">A structured four-step approach to delivering AI-enhanced results</p>
+    <div class="ai-steps">
+      <div class="ai-step">
+        <div class="step-num">1</div>
+        <h5>Discovery &amp; Audit</h5>
+        <p>We analyse your current marketing, identify where AI can make the biggest impact, and set clear goals.</p>
+      </div>
+      <div class="ai-step">
+        <div class="step-num">2</div>
+        <h5>Tool Selection</h5>
+        <p>We select and configure the right AI tools for your business — content, analytics, automation, or design.</p>
+      </div>
+      <div class="ai-step">
+        <div class="step-num">3</div>
+        <h5>Integration &amp; Testing</h5>
+        <p>Everything is connected to your existing platforms, tested thoroughly, and refined before going live.</p>
+      </div>
+      <div class="ai-step">
+        <div class="step-num">4</div>
+        <h5>Monitor &amp; Optimise</h5>
+        <p>We continuously monitor AI-driven results and optimise campaigns so performance keeps improving over time.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA strip -->
+  <div class="ai-cta-strip">
+    <div>
+      <h3>Ready to put AI to work for your business?</h3>
+      <p>Book a free 30-minute AI strategy session and discover what's possible.</p>
+    </div>
+    <a href="#contact">Book a Free Session</a>
+  </div>
+</section>
+
+<!-- VISION & MISSION -->
+<section class="section section-dark" style="background:var(--dark);">
+  <div class="vm-grid">
+    <div class="vm-card">
+      <h3>Our Vision</h3>
+      <p>Our vision is to become the world's leading firm in web design, development, and digital marketing. Our mission is to empower a global clientele with innovative, affordable, and user-friendly web development and marketing solutions.</p>
+    </div>
+    <div class="vm-card">
+      <h3>Our Mission</h3>
+      <p>Our goal is to help businesses worldwide thrive by delivering innovative and practical design, development, and marketing services that give them a competitive edge and drive their sales to new heights.</p>
+    </div>
+  </div>
+</section>
+
+<!-- THE DESIGN PROCESS -->
+<section class="section" id="process">
+  <div style="text-align:center;margin-bottom:40px;">
+    <div class="section-label" style="display:inline-block;">How We Work</div>
+    <h2 style="text-align:center;">The <span>Design Process</span></h2>
+    <p class="section-subtitle">Have a sneak peek at how our design and development process works.</p>
+  </div>
+  <div class="process-steps">
+    <div class="p-step">
+      <div class="p-step-num">Stage 1</div>
+      <h4>Project Discussions</h4>
+      <p>Discussion about your project goals and objectives.</p>
+    </div>
+    <div class="p-step">
+      <div class="p-step-num">Stage 2</div>
+      <h4>Project Wireframe</h4>
+      <p>Get your project wireframe before starting the development phase.</p>
+    </div>
+    <div class="p-step">
+      <div class="p-step-num">Stage 3</div>
+      <h4>Project Making</h4>
+      <p>Get your project developed by the best team without any hassle.</p>
+    </div>
+    <div class="p-step">
+      <div class="p-step-num">Stage 4</div>
+      <h4>Project Handover</h4>
+      <p>Seamlessly transition to ownership with our stress-free handover process.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="contact-left">
+    <div class="section-label">Say Hello</div>
+    <h2>GOT AN IDEA?</h2>
+    <p>Lets get in touch</p>
+  </div>
+  <div class="contact-form">
+    <form onsubmit="return false;">
+      <input type="text" placeholder="Name" />
+      <input type="email" placeholder="Email" />
+      <input type="tel" placeholder="Tel" />
+      <textarea placeholder="Message"></textarea>
+      <button type="submit">SEND</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">
+    <div class="logo-box">VM</div>
+    <div class="logo-text" style="color:#aaa;">Vigorous<br>Marketing</div>
+  </div>
+  <p>Vigorous Marketing Ltd. 2025</p>
+</footer>
+
+</body>
+</html>
