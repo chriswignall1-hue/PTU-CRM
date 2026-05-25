@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liverpool Glass &amp; Joinery Ltd. | Penny Lane</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:  #080808;
+      --gold:   #c9a96e;
+      --gold-light: #e2c898;
+      --cream:  #f0e8d8;
+      --white:  #ffffff;
+      --grey:   #888888;
+      --border: rgba(201,169,110,0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ─── SCROLLBAR ─────────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--black); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); }
+
+    /* ─── NAV TOGGLE ────────────────────────────── */
+    #nav-toggle {
+      position: fixed;
+      top: 28px;
+      right: 28px;
+      z-index: 1000;
+      width: 58px;
+      height: 58px;
+      border: 1.5px solid rgba(255,255,255,0.6);
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      transition: border-color .3s;
+    }
+    #nav-toggle:hover { border-color: var(--gold); }
+    #nav-toggle span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--white);
+      transition: all .4s ease;
+    }
+    #nav-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    #nav-toggle.open span:nth-child(2) { opacity: 0; transform: translateX(-10px); }
+    #nav-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* ─── LOGO TOP LEFT ─────────────────────────── */
+    #site-logo {
+      position: fixed;
+      top: 24px;
+      left: 32px;
+      z-index: 1000;
+      text-decoration: none;
+    }
+    #site-logo .logo-line1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+    #site-logo .logo-line2 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+    }
+
+    /* ─── FULL SCREEN NAV OVERLAY ───────────────── */
+    #nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: #060606;
+      z-index: 900;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .5s ease;
+    }
+    #nav-overlay.open { opacity: 1; pointer-events: all; }
+
+    #nav-overlay nav {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .nav-item a {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 300;
+      font-size: clamp(13px, 2.2vw, 18px);
+      letter-spacing: 5px;
+      color: var(--white);
+      text-decoration: none;
+      text-transform: uppercase;
+      padding: 14px 0;
+      transition: color .3s;
+      position: relative;
+    }
+    .nav-item a::after {
+      content: '';
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width .3s;
+    }
+    .nav-item a:hover { color: var(--gold); }
+    .nav-item a:hover::after { width: 100%; }
+
+    .nav-divider {
+      width: 28px;
+      height: 1px;
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* ─── SECTIONS ──────────────────────────────── */
+    section {
+      position: relative;
+      width: 100%;
+    }
+
+    /* ─── HERO ──────────────────────────────────── */
+    #hero {
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      background: var(--black);
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(8,8,8,0.3) 0%, rgba(8,8,8,0.55) 60%, rgba(8,8,8,0.92) 100%),
+        url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&q=80') center/cover no-repeat;
+    }
+
+    /* Fallback hero art when no image */
+    .hero-art {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,169,110,0.08) 0%, transparent 70%),
+        linear-gradient(180deg, #0d0d0d 0%, #060606 100%);
+    }
+    .hero-art::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 79px, rgba(201,169,110,0.04) 80px),
+        repeating-linear-gradient(90deg, transparent, transparent 79px, rgba(201,169,110,0.04) 80px);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 20px;
+    }
+    .hero-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 6px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 10vw, 110px);
+      font-weight: 300;
+      line-height: 0.92;
+      letter-spacing: 2px;
+      color: var(--white);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .hero-subtitle {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(9px, 1.8vw, 13px);
+      font-weight: 300;
+      letter-spacing: 6px;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      margin-bottom: 50px;
+    }
+    .hero-cta {
+      display: inline-block;
+      border: 1px solid rgba(255,255,255,0.6);
+      padding: 16px 40px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 5px;
+      color: var(--white);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: all .35s ease;
+    }
+    .hero-cta:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--black);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      z-index: 2;
+    }
+    .hero-scroll span {
+      font-size: 8px;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(201,169,110,0.7), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: scaleY(0.8); }
+      50% { opacity: 1; transform: scaleY(1); }
+    }
+
+    /* ─── SECTION BASE ──────────────────────────── */
+    .section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 100px 40px;
+    }
+    @media (max-width: 768px) {
+      .section-inner { padding: 70px 24px; }
+    }
+
+    .section-eyebrow {
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 5px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 30px;
+    }
+    .section-divider {
+      width: 50px;
+      height: 1px;
+      background: var(--gold);
+      margin-bottom: 36px;
+    }
+    .section-body {
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.9;
+      color: rgba(255,255,255,0.65);
+      max-width: 680px;
+    }
+
+    /* ─── INTRO STRIP ───────────────────────────── */
+    #intro {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    @media (max-width: 768px) {
+      .intro-grid { grid-template-columns: 1fr; }
+    }
+    .intro-left {
+      padding: 80px 60px 80px 40px;
+      border-right: 1px solid var(--border);
+    }
+    @media (max-width: 768px) {
+      .intro-left { padding: 60px 24px; border-right: none; border-bottom: 1px solid var(--border); }
+    }
+    .intro-right {
+      padding: 80px 40px 80px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    @media (max-width: 768px) {
+      .intro-right { padding: 60px 24px; }
+    }
+    .intro-stat {
+      margin-bottom: 40px;
+    }
+    .intro-stat:last-child { margin-bottom: 0; }
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .stat-label {
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+    }
+
+    /* ─── ABOUT ─────────────────────────────────── */
+    #about { background: #0a0a0a; }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      .about-grid { grid-template-columns: 1fr; gap: 50px; }
+    }
+    .about-image-frame {
+      position: relative;
+      aspect-ratio: 4/5;
+      background: #111;
+      overflow: hidden;
+    }
+    .about-image-frame::before {
+      content: '';
+      position: absolute;
+      inset: 16px;
+      border: 1px solid rgba(201,169,110,0.3);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .about-image-inner {
+      width: 100%;
+      height: 100%;
+      background:
+        linear-gradient(135deg, rgba(201,169,110,0.06) 0%, transparent 50%),
+        linear-gradient(225deg, rgba(201,169,110,0.04) 0%, transparent 50%),
+        #0f0f0f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+      color: rgba(201,169,110,0.3);
+    }
+    .about-image-inner svg { width: 60px; height: 60px; }
+    .about-image-inner span {
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(201,169,110,0.3);
+    }
+    .timeline {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .timeline-item {
+      display: flex;
+      gap: 20px;
+    }
+    .timeline-year {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      color: var(--gold);
+      min-width: 55px;
+      padding-top: 2px;
+    }
+    .timeline-text {
+      font-size: 13px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.55);
+      border-left: 1px solid var(--border);
+      padding-left: 20px;
+    }
+
+    /* ─── HOW WE WORK ───────────────────────────── */
+    #how-we-work {
+      background: linear-gradient(to bottom, #060606, #0d0a05);
+    }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 60px;
+    }
+    @media (max-width: 900px) {
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .steps-grid { grid-template-columns: 1fr; }
+    }
+    .step-card {
+      background: #080806;
+      padding: 40px 30px;
+      transition: background .3s;
+    }
+    .step-card:hover { background: #0f0e09; }
+    .step-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      font-weight: 300;
+      color: rgba(201,169,110,0.2);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+    .step-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .step-text {
+      font-size: 12px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* ─── DESIGN ─────────────────────────────────── */
+    #design { background: #0a0a0a; }
+    .design-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      .design-grid { grid-template-columns: 1fr; gap: 50px; }
+    }
+    .design-features {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .design-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .design-feature:first-child { border-top: 1px solid var(--border); }
+    .feature-icon {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .feature-icon svg { width: 16px; height: 16px; fill: var(--gold); }
+    .feature-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      color: var(--white);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .feature-desc {
+      font-size: 12px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.7;
+    }
+    .design-visual {
+      position: relative;
+      aspect-ratio: 1;
+      background: #0f0f0f;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .design-visual::before {
+      content: '';
+      position: absolute;
+      inset: 20px;
+      border: 1px solid rgba(201,169,110,0.15);
+    }
+    /* Stained glass SVG art */
+    .stained-glass-art {
+      width: 70%;
+      height: 70%;
+    }
+
+    /* ─── GALLERY ────────────────────────────────── */
+    .gallery-section { background: #060606; }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 50px;
+    }
+    @media (max-width: 768px) {
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .gallery-grid { grid-template-columns: 1fr; }
+    }
+    .gallery-item {
+      position: relative;
+      aspect-ratio: 4/3;
+      background: #111;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .gallery-item:first-child {
+      grid-column: span 2;
+      grid-row: span 2;
+      aspect-ratio: auto;
+    }
+    @media (max-width: 480px) {
+      .gallery-item:first-child { grid-column: span 1; grid-row: span 1; aspect-ratio: 4/3; }
+    }
+    .gallery-placeholder {
+      width: 100%;
+      height: 100%;
+      min-height: 200px;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+      transition: background .3s;
+    }
+    .gallery-placeholder:hover { background: #161616; }
+    .gallery-placeholder svg { width: 32px; height: 32px; }
+    .gallery-placeholder span {
+      font-size: 8px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(201,169,110,0.3);
+    }
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(8,8,8,0.7);
+      display: flex;
+      align-items: flex-end;
+      padding: 24px;
+      opacity: 0;
+      transition: opacity .35s;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-overlay-text {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    /* ─── FAQs ──────────────────────────────────── */
+    #faqs { background: #0a0a0a; }
+    .faq-list {
+      max-width: 800px;
+      margin-top: 50px;
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-item:first-child { border-top: 1px solid var(--border); }
+    .faq-question {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 0;
+      cursor: pointer;
+      gap: 20px;
+      list-style: none;
+    }
+    .faq-question::-webkit-details-marker { display: none; }
+    .faq-q-text {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      color: var(--white);
+    }
+    .faq-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      border: 1px solid rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .3s, background .3s;
+    }
+    details[open] .faq-icon {
+      transform: rotate(45deg);
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+    details[open] .faq-icon svg { stroke: #000; }
+    .faq-icon svg {
+      width: 10px;
+      height: 10px;
+      stroke: var(--white);
+      stroke-width: 2;
+      fill: none;
+    }
+    .faq-answer {
+      padding: 0 0 24px 0;
+      font-size: 13px;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.5);
+      max-width: 680px;
+    }
+
+    /* ─── TRADE ──────────────────────────────────── */
+    #trade {
+      background: linear-gradient(135deg, #0a0a08 0%, #090908 100%);
+    }
+    .trade-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    @media (max-width: 900px) {
+      .trade-grid { grid-template-columns: 1fr; gap: 50px; }
+    }
+    .trade-benefits {
+      margin-top: 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .trade-benefit {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+    }
+    .trade-benefit::before {
+      content: '';
+      width: 20px;
+      height: 1px;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    /* ─── BLOG ───────────────────────────────────── */
+    #blog { background: #060606; }
+    .blog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 50px;
+    }
+    @media (max-width: 768px) {
+      .blog-grid { grid-template-columns: 1fr; }
+    }
+    .blog-card {
+      background: #0a0a0a;
+      padding: 36px 30px;
+      border: 1px solid transparent;
+      transition: border-color .3s;
+    }
+    .blog-card:hover { border-color: var(--border); }
+    .blog-date {
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .blog-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 14px;
+      line-height: 1.3;
+    }
+    .blog-excerpt {
+      font-size: 12px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 24px;
+    }
+    .blog-read-more {
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      text-transform: uppercase;
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color .3s;
+    }
+    .blog-read-more:hover { border-bottom-color: var(--gold); }
+
+    /* ─── CONTACT ────────────────────────────────── */
+    #contact { background: #080808; }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+    }
+    @media (max-width: 900px) {
+      .contact-grid { grid-template-columns: 1fr; gap: 50px; }
+    }
+    .contact-info { display: flex; flex-direction: column; gap: 30px; }
+    .contact-block-label {
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .contact-block-value {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.7);
+      line-height: 1.7;
+    }
+    .contact-block-value a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: color .3s;
+    }
+    .contact-block-value a:hover { color: var(--gold); }
+
+    /* Contact Form */
+    .contact-form { display: flex; flex-direction: column; gap: 20px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    .form-label {
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+    }
+    .form-input, .form-textarea, .form-select {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 14px 16px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--white);
+      outline: none;
+      transition: border-color .3s;
+      width: 100%;
+    }
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus { border-color: var(--gold); }
+    .form-textarea { resize: vertical; min-height: 120px; }
+    .form-select option { background: #111; }
+    .form-submit {
+      align-self: flex-start;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.5);
+      padding: 16px 40px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 4px;
+      color: var(--white);
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .35s;
+    }
+    .form-submit:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--black);
+    }
+
+    /* ─── FULL WIDTH BANNER ─────────────────────── */
+    .banner {
+      padding: 80px 40px;
+      text-align: center;
+      background: linear-gradient(135deg, #0d0a05, #080808, #0d0a05);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .banner-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 300;
+      color: var(--white);
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+    }
+    .banner-sub {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────── */
+    footer {
+      background: #040404;
+      padding: 60px 40px 40px;
+      border-top: 1px solid var(--border);
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 50px;
+      margin-bottom: 50px;
+    }
+    @media (max-width: 900px) {
+      .footer-inner { grid-template-columns: 1fr 1fr; gap: 40px; }
+    }
+    @media (max-width: 480px) {
+      .footer-inner { grid-template-columns: 1fr; }
+    }
+    .footer-brand {}
+    .footer-logo-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      color: var(--white);
+      margin-bottom: 6px;
+    }
+    .footer-logo-sub {
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .footer-tagline {
+      font-size: 12px;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.35);
+    }
+    .footer-col-title {
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-links a {
+      font-size: 12px;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      letter-spacing: 1px;
+      transition: color .3s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .footer-copy {
+      font-size: 10px;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 1px;
+    }
+    .footer-address {
+      font-size: 10px;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 1px;
+    }
+
+    /* ─── REVEAL ANIMATION ──────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── MOBILE ADJUSTMENTS ────────────────────── */
+    @media (max-width: 480px) {
+      #site-logo .logo-line1 { font-size: 11px; }
+      #nav-toggle { top: 20px; right: 20px; width: 48px; height: 48px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── LOGO ─────────────────────────────────── -->
+  <a href="#hero" id="site-logo">
+    <div class="logo-line1">Liverpool Glass &amp; Joinery</div>
+    <div class="logo-line2">Penny Lane · Est. 1962</div>
+  </a>
+
+  <!-- ─── NAV TOGGLE ───────────────────────────── -->
+  <button id="nav-toggle" aria-label="Toggle navigation">
+    <span></span><span></span><span></span>
+  </button>
+
+  <!-- ─── NAV OVERLAY ──────────────────────────── -->
+  <div id="nav-overlay">
+    <nav>
+      <div class="nav-item"><a href="#hero" class="nav-link">Home</a></div>
+      <div class="nav-divider"></div>
+      <div class="nav-item"><a href="#about" class="nav-link">About</a></div>
+      <div class="nav-divider"></div>
+      <div class="nav-item"><a href="#how-we-work" class="nav-link">How We Work</a></div>
+      <div class="nav-divider"></div>
+      <div class="nav-item"><a href="#design" class="nav-link">Design</a></div>
+      <div class="nav-divider"></div>
+      <div class="nav-item"><a href="#joinery-gallery" class="nav-link">Joinery Gallery</a></div>
+      <div class="nav-divider"></div>
+      <div class="nav-item"><a href="#glass-gallery" class="nav-link">Glass &amp; Stained Glass Gallery</a></div>
+      <div class="nav-divider"></div>
+      <div class="nav-item"><a href="#trade" class="nav-link">Trade</a></div>
+      <div class="nav-divider"></div>
+      <div class="nav-item"><a href="#faqs" class="nav-link">FAQs</a></div>
+      <div class="nav-divider"></div>
+      <div class="nav-item"><a href="#blog" class="nav-link">Our Blog</a></div>
+      <div class="nav-divider"></div>
+      <div class="nav-item"><a href="#contact" class="nav-link">Contact</a></div>
+    </nav>
+  </div>
+
+  <!-- ─── HERO ─────────────────────────────────── -->
+  <section id="hero">
+    <div class="hero-art"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Est. 1962 &nbsp;·&nbsp; Penny Lane, Liverpool</p>
+      <h1 class="hero-title">Liverpool<br>Glass &amp;<br>Joinery</h1>
+      <p class="hero-subtitle">Glass &amp; Joinery Ltd. &nbsp;·&nbsp; Stephen Woodcock</p>
+      <a href="#about" class="hero-cta">Discover More &#9658;</a>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ─── INTRO STRIP ──────────────────────────── -->
+  <section id="intro">
+    <div class="intro-grid">
+      <div class="intro-left reveal">
+        <div class="section-eyebrow">Our Legacy</div>
+        <h2 class="section-title">Three Generations<br>of Craftsmanship</h2>
+        <div class="section-divider"></div>
+        <p class="section-body">For over three generations, our family has proudly built a reputation for quality craftsmanship in joinery and glass fitting. Combining traditional skills with modern techniques, we deliver bespoke woodwork, precision glazing, and reliable installation services to homes and businesses across Liverpool and beyond.</p>
+      </div>
+      <div class="intro-right reveal">
+        <div class="intro-stat">
+          <div class="stat-number">1962</div>
+          <div class="stat-label">Year Founded</div>
+        </div>
+        <div class="intro-stat">
+          <div class="stat-number">3</div>
+          <div class="stat-label">Generations of Expertise</div>
+        </div>
+        <div class="intro-stat">
+          <div class="stat-number">42+</div>
+          <div class="stat-label">Years in Stained Glass</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── ABOUT ─────────────────────────────────── -->
+  <section id="about">
+    <div class="section-inner">
+      <div class="about-grid">
+        <div class="about-image-frame reveal">
+          <div class="about-image-inner">
+            <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="56" height="56" stroke="#c9a96e" stroke-width="1" opacity="0.4"/>
+              <rect x="10" y="10" width="40" height="40" stroke="#c9a96e" stroke-width="0.5" opacity="0.3"/>
+              <line x1="10" y1="30" x2="50" y2="30" stroke="#c9a96e" stroke-width="0.5" opacity="0.3"/>
+              <line x1="30" y1="10" x2="30" y2="50" stroke="#c9a96e" stroke-width="0.5" opacity="0.3"/>
+              <circle cx="30" cy="30" r="12" stroke="#c9a96e" stroke-width="0.5" opacity="0.3"/>
+            </svg>
+            <span>Family Portrait</span>
+          </div>
+        </div>
+        <div class="reveal">
+          <div class="section-eyebrow">About Us</div>
+          <h2 class="section-title">A Family Story<br>Spanning Decades</h2>
+          <div class="section-divider"></div>
+          <p class="section-body">What began as one man's craft has grown into a legacy of excellence. Our commitment to attention to detail, durability, and customer satisfaction has been passed down through the years, making us a trusted name throughout Liverpool and beyond.</p>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-year">1962</div>
+              <div class="timeline-text">Joe Woodcock established the foundations of the company through traditional craftsmanship and skilled workmanship, building a reputation that would endure for generations.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">1979</div>
+              <div class="timeline-text">Colin took over the business and continued to grow its reputation for reliability, attention to detail, and high-quality work across Liverpool.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">1983</div>
+              <div class="timeline-text">Alan joined the company. Together, Colin and Alan spent decades delivering stained glass, precision glazing, and professional installation services for homes and businesses alike.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-year">2026</div>
+              <div class="timeline-text">Colin and Alan retired together, proudly passing the company on to Stephen Woodcock and the next generation — honouring its heritage while bringing fresh ideas and modern expertise.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── HOW WE WORK ───────────────────────────── -->
+  <section id="how-we-work">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-eyebrow">Our Process</div>
+        <h2 class="section-title">How We Create<br>Stained Glass</h2>
+        <div class="section-divider"></div>
+        <p class="section-body">Every stained glass commission follows an eight-stage process refined over 42 years — from the first conversation to the final installation. Here's how we bring your vision to life.</p>
+      </div>
+      <div class="steps-grid reveal">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <div class="step-title">Consultation &amp; Design</div>
+          <div class="step-text">Every project begins with a personal consultation. We work closely with you to understand your style, space, and vision before creating a bespoke design tailored to your property.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <div class="step-title">Choosing the Glass</div>
+          <div class="step-text">We carefully select high-quality coloured, textured, or decorative glass to suit the design. We help you choose the right combination of colours and finishes for the perfect result.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <div class="step-title">Hand Cutting</div>
+          <div class="step-text">Each individual piece of glass is precisely hand-cut by our skilled craftsmen using traditional techniques passed down through three generations of joiners and glass fitters.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">04</div>
+          <div class="step-title">Detailed Craftsmanship</div>
+          <div class="step-text">Where required, decorative details and patterns are added to the glass to create unique and personalised designs. Every piece is crafted with attention to detail and accuracy.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">05</div>
+          <div class="step-title">Assembly &amp; Leading</div>
+          <div class="step-text">The glass pieces are assembled using traditional leadwork methods, carefully fitted together to form a strong and beautifully balanced stained glass panel.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">06</div>
+          <div class="step-title">Strengthening &amp; Finishing</div>
+          <div class="step-text">Our team solders and reinforces every joint to ensure long-lasting durability. Each panel is thoroughly cleaned and inspected before installation.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">07</div>
+          <div class="step-title">Professional Installation</div>
+          <div class="step-text">We professionally install the stained glass into windows, doors, or custom joinery features, ensuring a secure fit and flawless appearance.</div>
+        </div>
+        <div class="step-card">
+          <div class="step-num">08</div>
+          <div class="step-title">A Tradition of Quality</div>
+          <div class="step-text">With 42 years of experience in stained glass, we combine traditional craftsmanship with modern techniques to create timeless designs that add character, elegance, and individuality.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── DESIGN ────────────────────────────────── -->
+  <section id="design">
+    <div class="section-inner">
+      <div class="design-grid">
+        <div class="reveal">
+          <div class="section-eyebrow">Bespoke Design</div>
+          <h2 class="section-title">Crafted to Your<br>Exact Vision</h2>
+          <div class="section-divider"></div>
+          <p class="section-body">Every project we undertake is entirely bespoke. From initial sketch to final installation, our designs are tailored precisely to your space, your style, and your requirements. No two projects are ever the same.</p>
+          <div class="design-features">
+            <div class="design-feature">
+              <div class="feature-icon">
+                <svg viewBox="0 0 16 16"><path d="M8 1L15 8L8 15L1 8L8 1Z"/></svg>
+              </div>
+              <div>
+                <div class="feature-label">Bespoke Joinery</div>
+                <div class="feature-desc">Handcrafted fitted furniture, staircases, doors, and architectural woodwork built to last.</div>
+              </div>
+            </div>
+            <div class="design-feature">
+              <div class="feature-icon">
+                <svg viewBox="0 0 16 16"><rect x="1" y="1" width="14" height="14" stroke-width="1.5"/></svg>
+              </div>
+              <div>
+                <div class="feature-label">Precision Glazing</div>
+                <div class="feature-desc">Supply and installation of all glass types — safety, decorative, double-glazed, and more.</div>
+              </div>
+            </div>
+            <div class="design-feature">
+              <div class="feature-icon">
+                <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" stroke-width="1.5"/></svg>
+              </div>
+              <div>
+                <div class="feature-label">Stained Glass</div>
+                <div class="feature-desc">Traditional hand-crafted stained glass panels for windows, doors, and architectural features.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="design-visual reveal">
+          <!-- Decorative stained glass SVG art -->
+          <svg class="stained-glass-art" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Outer border -->
+            <rect x="10" y="10" width="280" height="280" stroke="#c9a96e" stroke-width="1.5" fill="none"/>
+            <!-- Corner ornaments -->
+            <rect x="10" y="10" width="40" height="40" stroke="#c9a96e" stroke-width="1" fill="rgba(201,169,110,0.04)"/>
+            <rect x="250" y="10" width="40" height="40" stroke="#c9a96e" stroke-width="1" fill="rgba(201,169,110,0.04)"/>
+            <rect x="10" y="250" width="40" height="40" stroke="#c9a96e" stroke-width="1" fill="rgba(201,169,110,0.04)"/>
+            <rect x="250" y="250" width="40" height="40" stroke="#c9a96e" stroke-width="1" fill="rgba(201,169,110,0.04)"/>
+            <!-- Inner frame -->
+            <rect x="50" y="50" width="200" height="200" stroke="#c9a96e" stroke-width="0.5" fill="none" opacity="0.5"/>
+            <!-- Arch top -->
+            <path d="M50 150 Q50 50 150 50 Q250 50 250 150" stroke="#c9a96e" stroke-width="1" fill="rgba(201,169,110,0.03)"/>
+            <!-- Center diamond -->
+            <polygon points="150,80 200,150 150,220 100,150" stroke="#c9a96e" stroke-width="1" fill="rgba(201,169,110,0.05)"/>
+            <!-- Cross lines -->
+            <line x1="50" y1="150" x2="250" y2="150" stroke="#c9a96e" stroke-width="0.5" opacity="0.4"/>
+            <line x1="150" y1="50" x2="150" y2="250" stroke="#c9a96e" stroke-width="0.5" opacity="0.4"/>
+            <!-- Diagonal lines -->
+            <line x1="50" y1="50" x2="250" y2="250" stroke="#c9a96e" stroke-width="0.3" opacity="0.2"/>
+            <line x1="250" y1="50" x2="50" y2="250" stroke="#c9a96e" stroke-width="0.3" opacity="0.2"/>
+            <!-- Center circles -->
+            <circle cx="150" cy="150" r="40" stroke="#c9a96e" stroke-width="0.8" fill="rgba(201,169,110,0.03)" opacity="0.6"/>
+            <circle cx="150" cy="150" r="20" stroke="#c9a96e" stroke-width="0.5" fill="rgba(201,169,110,0.06)" opacity="0.5"/>
+            <circle cx="150" cy="150" r="6" fill="rgba(201,169,110,0.2)"/>
+            <!-- Small decorative elements -->
+            <circle cx="110" cy="110" r="4" stroke="#c9a96e" stroke-width="0.5" fill="rgba(201,169,110,0.08)"/>
+            <circle cx="190" cy="110" r="4" stroke="#c9a96e" stroke-width="0.5" fill="rgba(201,169,110,0.08)"/>
+            <circle cx="110" cy="190" r="4" stroke="#c9a96e" stroke-width="0.5" fill="rgba(201,169,110,0.08)"/>
+            <circle cx="190" cy="190" r="4" stroke="#c9a96e" stroke-width="0.5" fill="rgba(201,169,110,0.08)"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── JOINERY GALLERY ───────────────────────── -->
+  <section id="joinery-gallery" class="gallery-section">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-eyebrow">Portfolio</div>
+        <h2 class="section-title">Joinery Gallery</h2>
+        <div class="section-divider"></div>
+        <p class="section-body">A selection of our bespoke joinery projects — handcrafted staircases, fitted furniture, doors, and architectural woodwork delivered to homes and businesses across Liverpool.</p>
+      </div>
+      <div class="gallery-grid reveal">
+        <div class="gallery-item">
+          <div class="gallery-placeholder">
+            <svg viewBox="0 0 32 32" fill="none" stroke="rgba(201,169,110,0.3)" stroke-width="1"><rect x="4" y="4" width="24" height="24"/><line x1="4" y1="16" x2="28" y2="16"/><line x1="16" y1="4" x2="16" y2="28"/></svg>
+            <span>Bespoke Staircase</span>
+          </div>
+          <div class="gallery-overlay"><div class="gallery-overlay-text">Bespoke Staircase</div></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">
+            <svg viewBox="0 0 32 32" fill="none" stroke="rgba(201,169,110,0.3)" stroke-width="1"><rect x="4" y="4" width="24" height="24"/><rect x="8" y="8" width="16" height="16"/></svg>
+            <span>Fitted Wardrobes</span>
+          </div>
+          <div class="gallery-overlay"><div class="gallery-overlay-text">Fitted Wardrobes</div></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">
+            <svg viewBox="0 0 32 32" fill="none" stroke="rgba(201,169,110,0.3)" stroke-width="1"><rect x="6" y="2" width="20" height="28"/><line x1="6" y1="16" x2="26" y2="16"/></svg>
+            <span>Period Front Door</span>
+          </div>
+          <div class="gallery-overlay"><div class="gallery-overlay-text">Period Front Door</div></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">
+            <svg viewBox="0 0 32 32" fill="none" stroke="rgba(201,169,110,0.3)" stroke-width="1"><rect x="2" y="8" width="28" height="20"/><rect x="8" y="2" width="16" height="8"/></svg>
+            <span>Fitted Kitchen</span>
+          </div>
+          <div class="gallery-overlay"><div class="gallery-overlay-text">Fitted Kitchen</div></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">
+            <svg viewBox="0 0 32 32" fill="none" stroke="rgba(201,169,110,0.3)" stroke-width="1"><polygon points="16,2 30,30 2,30"/></svg>
+            <span>Roof Structure</span>
+          </div>
+          <div class="gallery-overlay"><div class="gallery-overlay-text">Roof Structure</div></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">
+            <svg viewBox="0 0 32 32" fill="none" stroke="rgba(201,169,110,0.3)" stroke-width="1"><rect x="4" y="4" width="24" height="24"/><circle cx="16" cy="16" r="8"/></svg>
+            <span>Sash Windows</span>
+          </div>
+          <div class="gallery-overlay"><div class="gallery-overlay-text">Sash Windows</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── GLASS & STAINED GLASS GALLERY ────────── -->
+  <section id="glass-gallery" class="gallery-section" style="background:#0a0a0a;">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-eyebrow">Portfolio</div>
+        <h2 class="section-title">Glass &amp; Stained Glass<br>Gallery</h2>
+        <div class="section-divider"></div>
+        <p class="section-body">Over 42 years of hand-crafted stained glass and precision glazing. From Victorian-inspired panels to contemporary bespoke commissions — every piece is a work of art.</p>
+      </div>
+      <div class="gallery-grid reveal">
+        <div class="gallery-item">
+          <div class="gallery-placeholder">
+            <svg viewBox="0 0 32 32" fill="none" stroke="rgba(201,169,110,0.3)" stroke-width="1">
+              <path d="M4 28 Q4 4 16 4 Q28 4 28 28Z"/>
+              <line x1="4" y1="18" x2="28" y2="18"/>
+              <line x1="16" y1="4" x2="16" y2="28"/>
+            </svg>
+            <span>Victorian Door Panel</span>
+          </div>
+          <div class="gallery-overlay"><div class="gallery-overlay-text">Victorian Door Panel</div></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">
+            <svg viewBox="0 0 32 32" fill="none" stroke="rgba(201,169,110,0.3)" stroke-width="1">
+              <rect x="4" y="4" width="24" height="24"/>
+              <polygon points="16,8 24,24 8,24"/>
+            </svg>
+            <span>Bespoke Commission</span>
+          </div>
+          <div class="gallery-overlay"><div class="gallery-overlay-text">Bespoke Commission</div></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">
+            <svg viewBox="0 0 32 32" fill="none" stroke="rgba(201,169,110,0.3)" stroke-width="1">
+              <rect x="4" y="4" width="24" height="24"/>
+              <circle cx="16" cy="16" r="10"/>
+              <circle cx="16" cy="16" r="4"/>
+            </svg>
+            <span>Church Commission</span>
+          </div>
+          <div class="gallery-overlay"><div class="gallery-overlay-text">Church Commission</div></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">
+            <svg viewBox="0 0 32 32" fill="none" stroke="rgba(201,169,110,0.3)" stroke-width="1">
+              <polygon points="16,2 30,16 16,30 2,16"/>
+              <line x1="16" y1="2" x2="16" y2="30"/>
+              <line x1="2" y1="16" x2="30" y2="16"/>
+            </svg>
+            <span>Feature Window</span>
+          </div>
+          <div class="gallery-overlay"><div class="gallery-overlay-text">Feature Window</div></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">
+            <svg viewBox="0 0 32 32" fill="none" stroke="rgba(201,169,110,0.3)" stroke-width="1">
+              <rect x="4" y="4" width="24" height="24"/>
+              <rect x="9" y="9" width="6" height="14"/>
+              <rect x="17" y="9" width="6" height="14"/>
+            </svg>
+            <span>Decorative Panel</span>
+          </div>
+          <div class="gallery-overlay"><div class="gallery-overlay-text">Decorative Panel</div></div>
+        </div>
+        <div class="gallery-item">
+          <div class="gallery-placeholder">
+            <svg viewBox="0 0 32 32" fill="none" stroke="rgba(201,169,110,0.3)" stroke-width="1">
+              <path d="M4 16 Q4 4 16 4 Q28 4 28 16L28 28L4 28Z"/>
+              <circle cx="16" cy="16" r="6"/>
+            </svg>
+            <span>Restoration Work</span>
+          </div>
+          <div class="gallery-overlay"><div class="gallery-overlay-text">Restoration Work</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TRADE ─────────────────────────────────── -->
+  <section id="trade">
+    <div class="section-inner">
+      <div class="trade-grid">
+        <div class="reveal">
+          <div class="section-eyebrow">Trade Enquiries</div>
+          <h2 class="section-title">Working With<br>Trade Professionals</h2>
+          <div class="section-divider"></div>
+          <p class="section-body">We work closely with builders, architects, interior designers, developers, and main contractors — providing reliable supply and installation services backed by three generations of expertise. Trade clients benefit from our flexible scheduling, volume pricing, and dedicated account management.</p>
+          <div class="trade-benefits">
+            <div class="trade-benefit">Dedicated trade account management</div>
+            <div class="trade-benefit">Competitive volume pricing</div>
+            <div class="trade-benefit">Flexible scheduling around your build programme</div>
+            <div class="trade-benefit">Residential, commercial, and heritage projects</div>
+            <div class="trade-benefit">Supply only or full supply &amp; install</div>
+            <div class="trade-benefit">Detailed specifications and drawings available</div>
+          </div>
+        </div>
+        <div class="reveal" style="display:flex;flex-direction:column;justify-content:center;gap:24px;">
+          <div style="border:1px solid var(--border);padding:36px 30px;">
+            <div class="section-eyebrow" style="margin-bottom:16px;">Register Your Interest</div>
+            <p style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.8;margin-bottom:24px;">Whether you're a contractor, developer, or architect, we'd love to discuss how we can support your next project. Get in touch to register your interest in a trade account.</p>
+            <a href="#contact" style="display:inline-block;border:1px solid rgba(255,255,255,0.4);padding:14px 30px;font-size:9px;letter-spacing:4px;color:var(--white);text-decoration:none;text-transform:uppercase;transition:all .3s;" onmouseover="this.style.background='var(--gold)';this.style.borderColor='var(--gold)';this.style.color='#000'" onmouseout="this.style.background='transparent';this.style.borderColor='rgba(255,255,255,0.4)';this.style.color='var(--white)'">Enquire Now</a>
+          </div>
+          <div style="padding:30px;background:#0d0d0d;border:1px solid var(--border);">
+            <div class="section-eyebrow" style="margin-bottom:12px;">Trade Contact</div>
+            <p style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.9;">
+              Joinery: <a href="tel:07812439582" style="color:var(--gold);text-decoration:none;">07812 439 582</a><br>
+              Glass: <a href="tel:07871582735" style="color:var(--gold);text-decoration:none;">07871 582 735</a><br>
+              <a href="mailto:info@liverpoolglass andjoinery.com" style="color:rgba(255,255,255,0.6);text-decoration:none;">info@liverpoolglassandjoinery.com</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── BANNER QUOTE ─────────────────────────── -->
+  <div class="banner reveal">
+    <p class="banner-sub">Our Promise</p>
+    <h2 class="banner-title">"Built on Tradition. Crafted to Last."</h2>
+    <p class="banner-sub">Quality &nbsp;·&nbsp; Craftsmanship &nbsp;·&nbsp; Tradition</p>
+  </div>
+
+  <!-- ─── FAQs ──────────────────────────────────── -->
+  <section id="faqs">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-eyebrow">Questions &amp; Answers</div>
+        <h2 class="section-title">Frequently Asked<br>Questions</h2>
+        <div class="section-divider"></div>
+      </div>
+      <div class="faq-list reveal">
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-q-text">How does the process start?</span>
+            <span class="faq-icon"><svg viewBox="0 0 10 10"><line x1="5" y1="1" x2="5" y2="9"/><line x1="1" y1="5" x2="9" y2="5"/></svg></span>
+          </summary>
+          <p class="faq-answer">We begin with a consultation to understand your needs, style preferences, and project requirements. From there, we provide expert advice and a detailed quotation.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-q-text">Do you offer bespoke joinery and glass solutions?</span>
+            <span class="faq-icon"><svg viewBox="0 0 10 10"><line x1="5" y1="1" x2="5" y2="9"/><line x1="1" y1="5" x2="9" y2="5"/></svg></span>
+          </summary>
+          <p class="faq-answer">Yes, all of our work can be fully customised to suit your space and design vision, whether it's fitted furniture, glazing, partitions, or specialist installations.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-q-text">How long does a project usually take?</span>
+            <span class="faq-icon"><svg viewBox="0 0 10 10"><line x1="5" y1="1" x2="5" y2="9"/><line x1="1" y1="5" x2="9" y2="5"/></svg></span>
+          </summary>
+          <p class="faq-answer">Project timelines vary depending on the size and complexity of the work. After the initial consultation, we will provide a clear timeframe and keep you updated throughout the process.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-q-text">Do you handle both residential and commercial projects?</span>
+            <span class="faq-icon"><svg viewBox="0 0 10 10"><line x1="5" y1="1" x2="5" y2="9"/><line x1="1" y1="5" x2="9" y2="5"/></svg></span>
+          </summary>
+          <p class="faq-answer">Absolutely. We work with homeowners, businesses, contractors, and developers on projects of all sizes.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-q-text">What materials do you use?</span>
+            <span class="faq-icon"><svg viewBox="0 0 10 10"><line x1="5" y1="1" x2="5" y2="9"/><line x1="1" y1="5" x2="9" y2="5"/></svg></span>
+          </summary>
+          <p class="faq-answer">We use high-quality timber, glass, and fittings to ensure durability, safety, and a premium finish on every project.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-q-text">Will I receive a quotation before work begins?</span>
+            <span class="faq-icon"><svg viewBox="0 0 10 10"><line x1="5" y1="1" x2="5" y2="9"/><line x1="1" y1="5" x2="9" y2="5"/></svg></span>
+          </summary>
+          <p class="faq-answer">Yes, we provide transparent, no-obligation quotations before any work starts, so you know exactly what to expect.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-q-text">Do you provide installation services?</span>
+            <span class="faq-icon"><svg viewBox="0 0 10 10"><line x1="5" y1="1" x2="5" y2="9"/><line x1="1" y1="5" x2="9" y2="5"/></svg></span>
+          </summary>
+          <p class="faq-answer">Yes, our experienced team handles both manufacturing and professional installation to ensure every detail is completed to the highest standard.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="faq-q-text">Why choose our company?</span>
+            <span class="faq-icon"><svg viewBox="0 0 10 10"><line x1="5" y1="1" x2="5" y2="9"/><line x1="1" y1="5" x2="9" y2="5"/></svg></span>
+          </summary>
+          <p class="faq-answer">With three generations of experience, we combine traditional craftsmanship with modern techniques, delivering reliable service, quality workmanship, and attention to detail on every project.</p>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── BLOG ──────────────────────────────────── -->
+  <section id="blog">
+    <div class="section-inner">
+      <div class="reveal">
+        <div class="section-eyebrow">Latest News</div>
+        <h2 class="section-title">Our Blog</h2>
+        <div class="section-divider"></div>
+        <p class="section-body">Insights, project updates, and craftsmanship stories from the team at Liverpool Glass &amp; Joinery Ltd.</p>
+      </div>
+      <div class="blog-grid reveal">
+        <div class="blog-card">
+          <div class="blog-date">May 2026 &nbsp;·&nbsp; Stained Glass</div>
+          <h3 class="blog-title">The Art of Victorian Stained Glass Restoration</h3>
+          <p class="blog-excerpt">Restoring a Victorian stained glass panel requires patience, precision, and deep knowledge of traditional techniques. We explore what the process involves and why it matters.</p>
+          <a href="#blog" class="blog-read-more">Read More</a>
+        </div>
+        <div class="blog-card">
+          <div class="blog-date">April 2026 &nbsp;·&nbsp; Joinery</div>
+          <h3 class="blog-title">Why Bespoke Staircases Are Worth the Investment</h3>
+          <p class="blog-excerpt">A bespoke staircase is more than a practical structure — it's a statement piece. We look at the design options, materials, and craftsmanship that go into each commission.</p>
+          <a href="#blog" class="blog-read-more">Read More</a>
+        </div>
+        <div class="blog-card">
+          <div class="blog-date">March 2026 &nbsp;·&nbsp; Heritage</div>
+          <h3 class="blog-title">Passing the Baton: A New Chapter for Liverpool Glass &amp; Joinery</h3>
+          <p class="blog-excerpt">After more than 40 years of combined service, Colin and Alan have retired and handed the reins to the next generation. Stephen Woodcock reflects on the journey ahead.</p>
+          <a href="#blog" class="blog-read-more">Read More</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CONTACT ───────────────────────────────── -->
+  <section id="contact">
+    <div class="section-inner">
+      <div class="reveal" style="margin-bottom:60px;">
+        <div class="section-eyebrow">Get In Touch</div>
+        <h2 class="section-title">Contact Us</h2>
+        <div class="section-divider"></div>
+        <p class="section-body">Whether you have a project in mind or simply want to find out more about what we do, we'd love to hear from you. Call in, call us, or fill out the form below.</p>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info reveal">
+          <div>
+            <div class="contact-block-label">Our Shop</div>
+            <div class="contact-block-value">
+              40 Penny Lane<br>Liverpool<br>L18 1DE
+            </div>
+          </div>
+          <div>
+            <div class="contact-block-label">Telephone</div>
+            <div class="contact-block-value">
+              Shop: <a href="tel:01517334389">0151 733 4389</a><br>
+              Joinery: <a href="tel:07812439582">07812 439 582</a><br>
+              Glass: <a href="tel:07871582735">07871 582 735</a>
+            </div>
+          </div>
+          <div>
+            <div class="contact-block-label">Email</div>
+            <div class="contact-block-value">
+              <a href="mailto:info@liverpoolglassandjoinery.com">info@liverpoolglassandjoinery.com</a>
+            </div>
+          </div>
+          <div>
+            <div class="contact-block-label">Follow Us</div>
+            <div class="contact-block-value">
+              <a href="https://instagram.com/Liverpool_glass_joinery_ltd" target="_blank" rel="noopener">@Liverpool_glass_joinery_ltd</a>
+            </div>
+          </div>
+          <div>
+            <div class="contact-block-label">Opening Hours</div>
+            <div class="contact-block-value">
+              Monday – Friday: 8:00am – 5:00pm<br>
+              Saturday: 9:00am – 1:00pm<br>
+              Sunday: Closed
+            </div>
+          </div>
+        </div>
+        <div class="reveal">
+          <form class="contact-form" onsubmit="handleFormSubmit(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">First Name</label>
+                <input type="text" class="form-input" placeholder="John" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last Name</label>
+                <input type="text" class="form-input" placeholder="Smith" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" placeholder="john@example.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Telephone</label>
+              <input type="tel" class="form-input" placeholder="07700 000 000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Type of Enquiry</label>
+              <select class="form-select form-input">
+                <option value="">Select...</option>
+                <option>Bespoke Joinery</option>
+                <option>Stained Glass</option>
+                <option>Glazing &amp; Windows</option>
+                <option>Doors</option>
+                <option>Trade Enquiry</option>
+                <option>Restoration</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Your Message</label>
+              <textarea class="form-textarea" placeholder="Tell us about your project..." required></textarea>
+            </div>
+            <button type="submit" class="form-submit">Send Enquiry</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ────────────────────────────────── -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo-text">Liverpool Glass &amp; Joinery Ltd.</div>
+        <div class="footer-logo-sub">Penny Lane · Est. 1962</div>
+        <p class="footer-tagline">Three generations of craftsmanship in joinery and glass fitting. Combining traditional skills with modern techniques since 1962.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Navigation</div>
+        <div class="footer-links">
+          <a href="#hero">Home</a>
+          <a href="#about">About</a>
+          <a href="#how-we-work">How We Work</a>
+          <a href="#design">Design</a>
+          <a href="#joinery-gallery">Joinery Gallery</a>
+          <a href="#glass-gallery">Glass Gallery</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">More</div>
+        <div class="footer-links">
+          <a href="#trade">Trade</a>
+          <a href="#faqs">FAQs</a>
+          <a href="#blog">Our Blog</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Contact</div>
+        <div class="footer-links" style="color:rgba(255,255,255,0.4);font-size:12px;line-height:1.9;">
+          <a href="tel:01517334389">0151 733 4389</a>
+          <a href="tel:07812439582">07812 439 582</a>
+          <a href="mailto:info@liverpoolglassandjoinery.com">info@liverpoolglassandjoinery.com</a>
+          <span style="color:rgba(255,255,255,0.25);">40 Penny Lane, Liverpool</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2026 Liverpool Glass &amp; Joinery Ltd. All rights reserved.</div>
+      <div class="footer-address">40 Penny Lane, Liverpool &nbsp;·&nbsp; Est. 1962</div>
+    </div>
+  </footer>
+
+  <script>
+    // ─── NAV TOGGLE ────────────────────────────────
+    const toggle = document.getElementById('nav-toggle');
+    const overlay = document.getElementById('nav-overlay');
+
+    toggle.addEventListener('click', () => {
+      const isOpen = overlay.classList.toggle('open');
+      toggle.classList.toggle('open', isOpen);
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        overlay.classList.remove('open');
+        toggle.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) {
+        overlay.classList.remove('open');
+        toggle.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // ─── SCROLL REVEAL ─────────────────────────────
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ─── FORM SUBMIT ────────────────────────────────
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('.form-submit');
+      const orig = btn.textContent;
+      btn.textContent = 'Message Sent';
+      btn.style.background = 'var(--gold)';
+      btn.style.borderColor = 'var(--gold)';
+      btn.style.color = '#000';
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.background = '';
+        btn.style.borderColor = '';
+        btn.style.color = '';
+        e.target.reset();
+      }, 3000);
+    }
+
+    // ─── SMOOTH LOGO SCROLL ─────────────────────────
+    document.getElementById('site-logo').addEventListener('click', e => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
