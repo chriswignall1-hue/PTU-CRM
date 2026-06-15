@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PTL — The Authority on Connection Reliability</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --white:#FFFFFF;
+  --surface:#FBFBFD;
+  --surface-2:#F5F5F7;
+  --black:#000000;
+  --ink:#1D1D1F;
+  --ink-2:#424245;
+  --ink-3:#6E6E73;
+  --ink-4:#86868B;
+  --blue:#0071E3;
+  --blue-hover:#0077ED;
+  --blue-light:rgba(0,113,227,0.08);
+  --teal:#00C7BE;
+  --rule:rgba(0,0,0,0.08);
+  --card-r:18px;
+  --shadow:0 2px 20px rgba(0,0,0,0.07),0 0 0 0.5px rgba(0,0,0,0.05);
+  --shadow-h:0 12px 40px rgba(0,0,0,0.12),0 0 0 0.5px rgba(0,0,0,0.06);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"SF Mono","Fira Mono",ui-monospace,monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);color:var(--ink);background:var(--white);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:52px;background:rgba(255,255,255,0.72);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:0.5px solid rgba(0,0,0,0.12);display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.nav-logo{font-size:20px;font-weight:700;letter-spacing:-0.03em;color:var(--ink);text-decoration:none}
+.nav-logo span{color:var(--blue)}
+.nav-links{display:flex;align-items:center;gap:28px;list-style:none;position:absolute;left:50%;transform:translateX(-50%)}
+.nav-links a{font-size:13px;color:var(--ink-2);text-decoration:none;letter-spacing:-0.01em;transition:color .15s}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{background:var(--blue);color:var(--white)!important;padding:8px 18px;border-radius:980px;font-size:13px!important;font-weight:500;letter-spacing:-0.01em;text-decoration:none;transition:background .2s}
+.nav-cta:hover{background:var(--blue-hover)!important}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 80px;background:var(--surface);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-10%;left:50%;transform:translateX(-50%);width:900px;height:700px;background:radial-gradient(ellipse at center,rgba(0,113,227,.1) 0%,transparent 65%);pointer-events:none}
+.hero-eyebrow{font-size:13px;font-weight:600;color:var(--blue);letter-spacing:.01em;margin-bottom:20px;position:relative}
+.hero h1{font-size:clamp(48px,7.5vw,96px);font-weight:700;letter-spacing:-0.04em;line-height:1.02;color:var(--ink);margin-bottom:24px;position:relative}
+.hero h1 em{font-style:italic;background:linear-gradient(135deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:19px;color:var(--ink-3);line-height:1.5;max-width:560px;margin:0 auto 40px;position:relative}
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;position:relative;margin-bottom:80px}
+.btn-primary{background:var(--blue);color:var(--white);padding:13px 26px;border-radius:980px;font-size:15px;font-weight:500;letter-spacing:-0.01em;text-decoration:none;transition:background .2s,transform .15s;border:none;cursor:pointer;display:inline-block;font-family:var(--font)}
+.btn-primary:hover{background:var(--blue-hover);transform:scale(1.02)}
+.btn-ghost{color:var(--blue);font-size:15px;font-weight:500;letter-spacing:-0.01em;text-decoration:none;display:inline-flex;align-items:center;gap:4px;transition:opacity .15s}
+.btn-ghost:hover{opacity:.7}
+.hero-stats{display:flex;align-items:stretch;position:relative;border:0.5px solid var(--rule);background:rgba(255,255,255,.8);backdrop-filter:blur(10px);border-radius:16px;overflow:hidden}
+.hero-stat{padding:24px 36px;text-align:center;border-right:0.5px solid var(--rule);flex:1}
+.hero-stat:last-child{border-right:none}
+.hero-stat-val{font-size:26px;font-weight:700;letter-spacing:-0.03em;color:var(--ink);line-height:1;margin-bottom:6px}
+.hero-stat-label{font-size:11px;color:var(--ink-4);letter-spacing:-0.01em;line-height:1.4}
+
+/* SECTION UTILS */
+.section{padding:120px 24px}
+.section-inner{max-width:1080px;margin:0 auto}
+.section-eyebrow{font-size:13px;font-weight:600;color:var(--blue);letter-spacing:.01em;margin-bottom:12px;display:block}
+.section-heading{font-size:clamp(32px,4.5vw,56px);font-weight:700;letter-spacing:-0.03em;line-height:1.06;color:var(--ink);margin-bottom:16px}
+.section-sub{font-size:19px;color:var(--ink-3);line-height:1.5;max-width:520px}
+
+/* PROBLEM */
+.problem{background:var(--black);padding:120px 24px}
+.problem .section-eyebrow{color:rgba(255,255,255,.35)}
+.problem .section-heading{color:var(--white)}
+.problem-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;margin-top:64px}
+.problem-statement{font-size:clamp(22px,2.5vw,30px);font-weight:400;font-style:italic;color:rgba(255,255,255,.65);line-height:1.45;letter-spacing:-0.02em}
+.cost-item{display:flex;gap:20px;padding:24px 0;border-bottom:0.5px solid rgba(255,255,255,.08)}
+.cost-item:first-child{border-top:0.5px solid rgba(255,255,255,.08)}
+.cost-num{font-family:var(--mono);font-size:10px;color:rgba(255,255,255,.25);margin-top:4px;flex-shrink:0;letter-spacing:.06em}
+.cost-text{font-size:15px;color:rgba(255,255,255,.5);line-height:1.55}
+.cost-text strong{color:rgba(255,255,255,.9);font-weight:600;display:block;margin-bottom:4px;font-size:16px;letter-spacing:-0.01em}
+
+/* PLATFORM */
+.platform{background:var(--surface-2)}
+.platform-intro{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:48px}
+.platform-note{font-size:17px;color:var(--ink-3);line-height:1.6;letter-spacing:-0.01em}
+.platform-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.division{background:var(--white);border-radius:var(--card-r);padding:32px 26px;box-shadow:var(--shadow);transition:box-shadow .3s,transform .3s;position:relative}
+.division:hover{box-shadow:var(--shadow-h);transform:translateY(-4px)}
+.division-chip{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:980px;margin-bottom:22px;background:var(--blue-light);color:var(--blue)}
+.div-2 .division-chip{background:rgba(0,199,190,.1);color:var(--teal)}
+.div-3 .division-chip{background:rgba(94,92,230,.08);color:#5E5CE6}
+.div-4 .division-chip{background:linear-gradient(135deg,rgba(0,113,227,.08),rgba(0,199,190,.08));color:var(--ink-2)}
+.division-name{font-size:24px;font-weight:700;letter-spacing:-0.03em;color:var(--ink);margin-bottom:6px;line-height:1.1}
+.division-verb{font-size:13px;color:var(--blue);font-weight:600;margin-bottom:14px}
+.div-2 .division-verb{color:var(--teal)}
+.div-3 .division-verb{color:#5E5CE6}
+.div-4 .division-verb{background:linear-gradient(90deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.division-desc{font-size:13px;color:var(--ink-3);line-height:1.6}
+
+/* FLYWHEEL */
+.flywheel{background:var(--white)}
+.flywheel-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;margin-top:56px}
+.fw-step{display:grid;grid-template-columns:40px 1fr;gap:16px;padding:22px 0;border-bottom:0.5px solid var(--rule);align-items:start}
+.fw-step:last-child{border-bottom:none}
+.fw-num-wrap{width:30px;height:30px;border-radius:50%;background:var(--blue-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.fw-num-wrap.loop{background:rgba(0,199,190,.1)}
+.fw-num-wrap.loop .fw-num{color:var(--teal)}
+.fw-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--blue)}
+.fw-title{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:4px;letter-spacing:-0.01em}
+.fw-desc{font-size:13px;color:var(--ink-3);line-height:1.55}
+.flywheel-visual{background:var(--surface-2);border-radius:var(--card-r);padding:36px;box-shadow:var(--shadow)}
+.fw-visual-label{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:24px}
+.fw-bar{margin-bottom:20px}
+.fw-bar:last-of-type{margin-bottom:24px}
+.fw-bar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.fw-bar-name{font-size:13px;font-weight:600;color:var(--ink-2);letter-spacing:-0.01em}
+.fw-bar-status{font-size:11px;font-weight:600;padding:2px 10px;border-radius:980px}
+.s-established{background:rgba(0,113,227,.1);color:var(--blue)}
+.s-live{background:rgba(0,199,190,.1);color:var(--teal)}
+.s-building{background:rgba(94,92,230,.08);color:#5E5CE6}
+.s-emerging{background:rgba(0,0,0,.05);color:var(--ink-3)}
+.fw-bar-track{height:5px;background:rgba(0,0,0,.08);border-radius:980px;overflow:hidden}
+.fw-bar-fill{height:100%;border-radius:980px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.fw-bar-note{font-size:12px;color:var(--ink-4);margin-top:16px;line-height:1.5;border-top:0.5px solid var(--rule);padding-top:16px}
+
+/* CLAMP */
+.clamp{background:var(--black);position:relative;overflow:hidden}
+.clamp-glow{position:absolute;top:20%;right:10%;width:600px;height:600px;background:radial-gradient(circle,rgba(91,184,212,.12) 0%,transparent 65%);filter:blur(60px);pointer-events:none}
+.clamp-inner{position:relative;max-width:1080px;margin:0 auto;padding:120px 24px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.clamp-eyebrow{font-size:13px;font-weight:600;color:rgba(255,255,255,.35);margin-bottom:16px;display:block;letter-spacing:.01em}
+.clamp-heading{font-size:clamp(40px,5vw,64px);font-weight:700;letter-spacing:-0.04em;line-height:1.04;color:var(--white);margin-bottom:20px}
+.clamp-heading span{background:linear-gradient(135deg,#5BB8D4,var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.clamp-body{font-size:17px;color:rgba(255,255,255,.5);line-height:1.6;margin-bottom:36px;letter-spacing:-0.01em}
+.clamp-specs{margin-bottom:36px;border:0.5px solid rgba(255,255,255,.1);border-radius:12px;overflow:hidden}
+.spec-row{display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:0.5px solid rgba(255,255,255,.06);font-size:13px}
+.spec-row:last-child{border-bottom:none}
+.spec-key{color:rgba(255,255,255,.35);letter-spacing:-0.01em}
+.spec-val{color:var(--white);font-weight:500;font-family:var(--mono);font-size:12px;letter-spacing:.01em}
+.clamp-visual{display:flex;align-items:center;justify-content:center}
+
+/* MARKET */
+.market{background:var(--surface)}
+.market-intro{text-align:center;max-width:640px;margin:0 auto 60px}
+.market-intro .section-sub{margin:0 auto}
+.market-numbers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+.mnum{background:var(--white);border-radius:var(--card-r);padding:40px 36px;box-shadow:var(--shadow);text-align:center}
+.mnum-val{font-size:52px;font-weight:700;letter-spacing:-0.04em;color:var(--ink);line-height:1;margin-bottom:12px}
+.mnum-val.accent{background:linear-gradient(135deg,var(--blue),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.mnum-label{font-size:14px;color:var(--ink-3);line-height:1.5}
+.mnum-label strong{color:var(--ink);font-weight:600;display:block;margin-bottom:4px;letter-spacing:-0.01em}
+.kneat-callout{background:var(--white);border-radius:var(--card-r);padding:40px;box-shadow:var(--shadow);display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:center}
+.kneat-badge{background:var(--ink);padding:22px 24px;border-radius:12px;text-align:center;flex-shrink:0;min-width:128px}
+.kneat-badge-val{font-size:26px;font-weight:700;letter-spacing:-0.03em;color:var(--white);line-height:1;margin-bottom:6px}
+.kneat-badge-label{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,.35);letter-spacing:.08em;text-transform:uppercase}
+.kneat-text-heading{font-size:18px;font-weight:700;letter-spacing:-0.02em;color:var(--ink);margin-bottom:10px}
+.kneat-text-body{font-size:15px;color:var(--ink-3);line-height:1.6;letter-spacing:-0.01em}
+
+/* CREDIBILITY */
+.cred{background:var(--black);padding:120px 24px}
+.cred .section-eyebrow{color:rgba(255,255,255,.35)}
+.cred .section-heading{color:var(--white)}
+.cred-header{text-align:center;max-width:600px;margin:0 auto 60px}
+.cred-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.cred-item{background:rgba(255,255,255,.04);border:0.5px solid rgba(255,255,255,.08);border-radius:var(--card-r);padding:40px;transition:background .25s,border-color .25s}
+.cred-item:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14)}
+.cred-icon{width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.cred-icon svg{width:18px;height:18px;stroke:rgba(255,255,255,.6);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.cred-heading{font-size:18px;font-weight:700;letter-spacing:-0.02em;color:var(--white);margin-bottom:10px}
+.cred-body{font-size:15px;color:rgba(255,255,255,.43);line-height:1.6;letter-spacing:-0.01em}
+.cred-body strong{color:rgba(255,255,255,.8);font-weight:600}
+
+/* PT LAB */
+.lab{background:var(--surface-2)}
+.lab-layout{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;margin-top:56px}
+.study{display:grid;grid-template-columns:44px 1fr auto;gap:16px;padding:20px 0;border-bottom:0.5px solid var(--rule);align-items:center}
+.study:first-child{border-top:0.5px solid var(--rule)}
+.study-num{font-family:var(--mono);font-size:10px;color:var(--blue);letter-spacing:.06em;font-weight:700}
+.study-title{font-size:14px;font-weight:600;color:var(--ink);letter-spacing:-0.01em;margin-bottom:3px}
+.study-sub{font-size:12px;color:var(--ink-4)}
+.study-status{font-size:11px;font-weight:600;padding:4px 12px;border-radius:980px;white-space:nowrap}
+.status-live{background:rgba(0,199,190,.12);color:var(--teal)}
+.status-next{background:rgba(0,113,227,.1);color:var(--blue)}
+.status-planned{background:rgba(0,0,0,.06);color:var(--ink-3)}
+.lab-quote{font-size:22px;font-weight:400;font-style:italic;color:var(--ink);line-height:1.45;letter-spacing:-0.02em;margin-bottom:24px;padding-left:20px;border-left:2px solid var(--blue)}
+.lab-body{font-size:15px;color:var(--ink-3);line-height:1.65;margin-bottom:28px;letter-spacing:-0.01em}
+.lab-pipeline{background:var(--white);border-radius:12px;padding:24px;box-shadow:var(--shadow)}
+.lab-pipeline-label{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-4);margin-bottom:16px}
+.pipeline-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--rule);font-size:13px;color:var(--ink-2);letter-spacing:-0.01em}
+.pipeline-item:last-child{border-bottom:none}
+.pipeline-dot{width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--teal));flex-shrink:0}
+
+/* REVIEW CTA */
+.review{background:linear-gradient(135deg,#0055B3,#0071E3 50%,#00A89C);position:relative;overflow:hidden}
+.review::before{content:'';position:absolute;top:-50%;left:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 65%);pointer-events:none}
+.review-inner{position:relative;max-width:1080px;margin:0 auto;padding:100px 24px;display:grid;grid-template-columns:1fr auto;gap:60px;align-items:center}
+.review-heading{font-size:clamp(32px,4vw,52px);font-weight:700;letter-spacing:-0.03em;line-height:1.06;color:var(--white);margin-bottom:16px}
+.review-sub{font-size:18px;color:rgba(255,255,255,.65);line-height:1.5;max-width:480px;letter-spacing:-0.01em}
+.review-form{display:flex;flex-direction:column;gap:10px;min-width:320px}
+.review-input{background:rgba(255,255,255,.12);border:0.5px solid rgba(255,255,255,.25);border-radius:10px;padding:14px 18px;font-size:15px;color:var(--white);font-family:var(--font);outline:none;transition:border-color .2s,background .2s;letter-spacing:-0.01em}
+.review-input::placeholder{color:rgba(255,255,255,.38)}
+.review-input:focus{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.16)}
+.btn-white{background:rgba(255,255,255,.95);color:var(--blue);padding:14px 24px;border-radius:10px;font-size:15px;font-weight:600;letter-spacing:-0.01em;border:none;cursor:pointer;font-family:var(--font);transition:background .2s,transform .15s;margin-top:2px}
+.btn-white:hover{background:var(--white);transform:scale(1.01)}
+.review-note{font-size:12px;color:rgba(255,255,255,.38);text-align:center;letter-spacing:-0.01em}
+
+/* FOOTER */
+footer{background:#1D1D1F}
+.footer-inner{max-width:1080px;margin:0 auto;padding:60px 24px 40px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:40px;border-bottom:0.5px solid rgba(255,255,255,.08)}
+.footer-brand{font-size:18px;font-weight:700;letter-spacing:-0.03em;color:var(--white);margin-bottom:10px}
+.footer-brand span{color:rgba(255,255,255,.3)}
+.footer-tagline{font-size:13px;color:rgba(255,255,255,.3);line-height:1.7;letter-spacing:-0.01em}
+.footer-col-title{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:16px}
+.footer-links{display:flex;flex-direction:column;gap:12px;list-style:none}
+.footer-links a{font-size:14px;color:rgba(255,255,255,.45);text-decoration:none;letter-spacing:-0.01em;transition:color .2s}
+.footer-links a:hover{color:var(--white)}
+.footer-bottom{max-width:1080px;margin:0 auto;padding:20px 24px;display:flex;justify-content:space-between;align-items:center}
+.footer-bottom p{font-size:12px;color:rgba(255,255,255,.2);letter-spacing:-0.01em}
+
+/* ANIMATIONS */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.4,0,.2,1),transform .7s cubic-bezier(.4,0,.2,1)}
+.reveal.visible{opacity:1;transform:none}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.hero-content{animation:fadeUp .9s cubic-bezier(.4,0,.2,1) forwards}
+.hero-stats{animation:fadeUp .9s .2s cubic-bezier(.4,0,.2,1) both}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .problem-layout,.platform-intro,.flywheel-layout,.clamp-inner,.lab-layout,.review-inner,.cred-grid{grid-template-columns:1fr}
+  .platform-grid{grid-template-columns:1fr 1fr}
+  .market-numbers{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .kneat-callout{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr}
+  .hero-stats{flex-direction:column}
+  .hero-stat{border-right:none;border-bottom:0.5px solid var(--rule)}
+  .hero-stat:last-child{border-bottom:none}
+}
+@media(max-width:600px){
+  .platform-grid{grid-template-columns:1fr}
+  .section{padding:80px 20px}
+  .problem,.cred{padding:80px 20px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">PTL<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#platform">Platform</a></li>
+    <li><a href="#clamp">Intelligent Clamp</a></li>
+    <li><a href="#lab">PT Lab</a></li>
+    <li><a href="#market">Market</a></li>
+  </ul>
+  <a href="#review" class="nav-cta">Book a Review</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-eyebrow">The Authority on Connection Reliability</p>
+    <h1>Connection failure<br>is never <em>unexpected.</em></h1>
+    <p class="hero-sub">Every batch loss, every compliance finding, every unplanned shutdown has a connection at its root. PTL exists to make that knowable — and preventable.</p>
+    <div class="hero-actions">
+      <a href="#review" class="btn-primary">Book a Reliability Review</a>
+      <a href="#platform" class="btn-ghost">How PTL works <span class="arrow">→</span></a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-val">$7.4B</div>
+      <div class="hero-stat-label">Hygienic fittings market, 2025</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">25 yrs</div>
+      <div class="hero-stat-label">Proprietary field data</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">ASME BPE</div>
+      <div class="hero-stat-label">Committee member</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">22%</div>
+      <div class="hero-stat-label">Intelligence tier share by 2034</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem" id="problem">
+  <div class="section-inner">
+    <span class="section-eyebrow reveal">The problem</span>
+    <h2 class="section-heading reveal">Most manufacturers treat connections<br>as a procurement decision.</h2>
+    <div class="problem-layout reveal">
+      <p class="problem-statement">"The industry spends significantly on compliance, validation, and quality assurance. Connection reliability is often the gap nobody is measuring — until something goes wrong."</p>
+      <div>
+        <div class="cost-item">
+          <span class="cost-num">01</span>
+          <div class="cost-text"><strong>Product contamination</strong>A single connection failure in a sterile line can trigger a batch loss worth tens of thousands. The gasket that caused it may have cost less than £5.</div>
+        </div>
+        <div class="cost-item">
+          <span class="cost-num">02</span>
+          <div class="cost-text"><strong>Compliance exposure</strong>A connection finding in an FDA or MHRA inspection can trigger facility-wide remediation programmes.</div>
+        </div>
+        <div class="cost-item">
+          <span class="cost-num">03</span>
+          <div class="cost-text"><strong>Operator-induced failure</strong>Installation errors are among the most common causes of connection failure. Most facilities have no systematic way to measure them.</div>
+        </div>
+        <div class="cost-item">
+          <span class="cost-num">04</span>
+          <div class="cost-text"><strong>Data blindness</strong>Most facilities cannot answer: how many of our connections are at risk right now?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLATFORM -->
+<section class="section platform" id="platform">
+  <div class="section-inner">
+    <div class="platform-intro reveal">
+      <div>
+        <span class="section-eyebrow">The PTL platform</span>
+        <h2 class="section-heading">Four disciplines.<br>One flywheel.</h2>
+      </div>
+      <p class="platform-note">PTL is not a component supplier that added a training course. It is a platform that connects products, knowledge, evidence, and intelligence — and each layer makes the next one more valuable.</p>
+    </div>
+    <div class="platform-grid reveal">
+      <div class="division div-1">
+        <span class="division-chip">PT Commercial</span>
+        <h3 class="division-name">We supply.</h3>
+        <p class="division-verb">Certified components</p>
+        <p class="division-desc">Hoses, gaskets, clamps and single-use assemblies specified for your exact application and compliant with ASME BPE, FDA and EHEDG requirements.</p>
+      </div>
+      <div class="division div-2">
+        <span class="division-chip">PT-U</span>
+        <h3 class="division-name">We teach.</h3>
+        <p class="division-verb">Operator training</p>
+        <p class="division-desc">15+ years of field observations formalised into operator education and competency development. Already live. Already commercial.</p>
+      </div>
+      <div class="division div-3">
+        <span class="division-chip">PT Lab</span>
+        <h3 class="division-name">We prove.</h3>
+        <p class="division-verb">Evidence &amp; R&amp;D</p>
+        <p class="division-desc">Physical failure investigation, component testing, and post-use evidence gathering. Three new products in pipeline. Quarterly studies published.</p>
+      </div>
+      <div class="division div-4">
+        <span class="division-chip">PT IQ</span>
+        <h3 class="division-name">We predict.</h3>
+        <p class="division-verb">Connection intelligence</p>
+        <p class="division-desc">25-year proprietary dataset meets live monitoring. Know when a connection will fail before it does. From reactive to intelligent.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLYWHEEL -->
+<section class="section flywheel" id="flywheel">
+  <div class="section-inner">
+    <span class="section-eyebrow reveal">How it compounds</span>
+    <h2 class="section-heading reveal">The flywheel is already turning.</h2>
+    <div class="flywheel-layout reveal">
+      <div>
+        <div class="fw-step">
+          <div class="fw-num-wrap"><span class="fw-num">01</span></div>
+          <div>
+            <p class="fw-title">PT Commercial generates access</p>
+            <p class="fw-desc">Customer relationships and cash flow fund platform development and provide the field environments for data collection.</p>
+          </div>
+        </div>
+        <div class="fw-step">
+          <div class="fw-num-wrap"><span class="fw-num">02</span></div>
+          <div>
+            <p class="fw-title">PT-U captures knowledge</p>
+            <p class="fw-desc">Training programmes already generating independent revenue. Knowledge formalised into a scalable, monetisable asset.</p>
+          </div>
+        </div>
+        <div class="fw-step">
+          <div class="fw-num-wrap"><span class="fw-num">03</span></div>
+          <div>
+            <p class="fw-title">PT Lab turns knowledge into evidence</p>
+            <p class="fw-desc">Failure analysis, testing, and field data converted into published studies and pipeline products. Evidence no competitor can replicate.</p>
+          </div>
+        </div>
+        <div class="fw-step">
+          <div class="fw-num-wrap"><span class="fw-num">04</span></div>
+          <div>
+            <p class="fw-title">PT IQ turns evidence into intelligence</p>
+            <p class="fw-desc">Proprietary dataset meets live connection monitoring. Customers stop replacing when things fail. They prevent failure before it happens.</p>
+          </div>
+        </div>
+        <div class="fw-step">
+          <div class="fw-num-wrap loop"><span class="fw-num">↺</span></div>
+          <div>
+            <p class="fw-title">Intelligence strengthens Commercial</p>
+            <p class="fw-desc">Better outcomes drive deeper customer relationships, higher switching costs, and compounding platform value.</p>
+          </div>
+        </div>
+      </div>
+      <div class="flywheel-visual">
+        <p class="fw-visual-label">Current platform maturity</p>
+        <div class="fw-bar">
+          <div class="fw-bar-header">
+            <span class="fw-bar-name">PT Commercial</span>
+            <span class="fw-bar-status s-established">Established</span>
+          </div>
+          <div class="fw-bar-track"><div class="fw-bar-fill" style="width:90%;background:var(--blue)"></div></div>
+        </div>
+        <div class="fw-bar">
+          <div class="fw-bar-header">
+            <span class="fw-bar-name">PT-U</span>
+            <span class="fw-bar-status s-live">Live</span>
+          </div>
+          <div class="fw-bar-track"><div class="fw-bar-fill" style="width:55%;background:var(--teal)"></div></div>
+        </div>
+        <div class="fw-bar">
+          <div class="fw-bar-header">
+            <span class="fw-bar-name">PT Lab</span>
+            <span class="fw-bar-status s-building">Building</span>
+          </div>
+          <div class="fw-bar-track"><div class="fw-bar-fill" style="width:35%;background:#5E5CE6"></div></div>
+        </div>
+        <div class="fw-bar">
+          <div class="fw-bar-header">
+            <span class="fw-bar-name">PT IQ</span>
+            <span class="fw-bar-status s-emerging">Emerging</span>
+          </div>
+          <div class="fw-bar-track"><div class="fw-bar-fill" style="width:15%;background:linear-gradient(90deg,var(--blue),var(--teal))"></div></div>
+        </div>
+        <p class="fw-bar-note">Each division feeds the next. The platform compounds in value over time — not because of a single product, but because of the system.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTELLIGENT CLAMP -->
+<section class="clamp" id="clamp">
+  <div class="clamp-glow"></div>
+  <div class="clamp-inner reveal">
+    <div>
+      <span class="clamp-eyebrow">PT IQ — Flagship product</span>
+      <h2 class="clamp-heading">The intelligent<br><span>clamp.</span></h2>
+      <p class="clamp-body">Every clamp installed becomes a live data node. Connection status, load, cycle frequency, temperature exposure — fed directly into PT IQ. The more clamps in the field, the smarter the platform gets. This is how PTL builds a data asset no competitor can replicate.</p>
+      <div class="clamp-specs">
+        <div class="spec-row"><span class="spec-key">Standard</span><span class="spec-val">ASME BPE compliant</span></div>
+        <div class="spec-row"><span class="spec-key">Data output</span><span class="spec-val">Live connection monitoring</span></div>
+        <div class="spec-row"><span class="spec-key">Integration</span><span class="spec-val">CIP / SIP cycle data</span></div>
+        <div class="spec-row"><span class="spec-key">Status</span><span class="spec-val">In development — PT Lab</span></div>
+      </div>
+      <a href="#review" class="btn-primary">Request pilot site information</a>
+    </div>
+    <div class="clamp-visual">
+      <svg width="340" height="340" viewBox="0 0 340 340" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="PTL intelligent clamp schematic">
+        <circle cx="170" cy="170" r="150" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <circle cx="170" cy="170" r="110" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <circle cx="170" cy="170" r="70" stroke="rgba(255,255,255,0.09)" stroke-width="1"/>
+        <path d="M100 150 Q100 100 150 90 L190 90 Q240 100 240 150 L240 190 Q240 240 190 250 L150 250 Q100 240 100 190 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+        <rect x="108" y="108" width="124" height="22" rx="4" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
+        <rect x="108" y="210" width="124" height="22" rx="4" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
+        <rect x="220" y="155" width="44" height="30" rx="4" fill="#1B2A4A" stroke="#5BB8D4" stroke-width="1.5"/>
+        <circle cx="232" cy="170" r="3" fill="#5BB8D4" opacity="0.9"/>
+        <circle cx="242" cy="170" r="3" fill="#5BB8D4" opacity="0.6"/>
+        <circle cx="252" cy="170" r="3" fill="#5BB8D4" opacity="0.3"/>
+        <line x1="264" y1="163" x2="295" y2="140" stroke="#5BB8D4" stroke-width="1" stroke-dasharray="3,3" opacity="0.6"/>
+        <line x1="264" y1="170" x2="300" y2="170" stroke="#5BB8D4" stroke-width="1" stroke-dasharray="3,3" opacity="0.4"/>
+        <line x1="264" y1="177" x2="295" y2="200" stroke="#5BB8D4" stroke-width="1" stroke-dasharray="3,3" opacity="0.25"/>
+        <circle cx="298" cy="140" r="3" fill="#5BB8D4" opacity="0.8"/>
+        <circle cx="303" cy="170" r="3" fill="#5BB8D4" opacity="0.6"/>
+        <circle cx="298" cy="200" r="3" fill="#5BB8D4" opacity="0.4"/>
+        <ellipse cx="170" cy="170" rx="42" ry="42" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"/>
+        <ellipse cx="170" cy="170" rx="28" ry="28" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+        <circle cx="108" cy="155" r="6" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
+        <circle cx="108" cy="231" r="6" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
+        <text x="170" y="310" text-anchor="middle" font-family="ui-monospace,monospace" font-size="10" fill="rgba(255,255,255,0.25)" letter-spacing="2">PT IQ — INTELLIGENT CLAMP</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- MARKET -->
+<section class="section market" id="market">
+  <div class="section-inner">
+    <div class="market-intro reveal">
+      <span class="section-eyebrow">Market context</span>
+      <h2 class="section-heading">A $13 billion market moving toward intelligence.</h2>
+      <p class="section-sub">The hygienic fittings industry is growing — and the most valuable segment of that growth is intelligence.</p>
+    </div>
+    <div class="market-numbers reveal">
+      <div class="mnum">
+        <div class="mnum-val">$7.4B</div>
+        <div class="mnum-label"><strong>Market size today</strong>Hygienic fittings globally — 2025</div>
+      </div>
+      <div class="mnum">
+        <div class="mnum-val">$13.1B</div>
+        <div class="mnum-label"><strong>Forecast by 2034</strong>Growing at 6.6% CAGR</div>
+      </div>
+      <div class="mnum">
+        <div class="mnum-val accent">22%</div>
+        <div class="mnum-label"><strong>Intelligence tier by 2034</strong>Up from 9% today — ~$2.9B</div>
+      </div>
+    </div>
+    <div class="kneat-callout reveal">
+      <div class="kneat-badge">
+        <div class="kneat-badge-val">C$650M</div>
+        <div class="kneat-badge-label">Kneat — June 2026</div>
+      </div>
+      <div>
+        <p class="kneat-text-heading">Proof that life sciences pays a platform premium.</p>
+        <p class="kneat-text-body">Thoma Bravo — the world's largest software-focused PE firm — acquired Kneat at a 40% premium for building the intelligence layer on top of pharmaceutical compliance. The parallel to PTL is not about business model. It is about category creation in the same regulated market. PTL is building the next category: connection reliability as a managed, intelligent discipline.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CREDIBILITY -->
+<section class="cred" id="credibility">
+  <div class="section-inner">
+    <div class="cred-header reveal">
+      <span class="section-eyebrow">Why PTL</span>
+      <h2 class="section-heading">Credentials the market cannot replicate.</h2>
+    </div>
+    <div class="cred-grid reveal">
+      <div class="cred-item">
+        <div class="cred-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/></svg>
+        </div>
+        <h3 class="cred-heading">ASME BPE Committee Member</h3>
+        <p class="cred-body">PTL helps write the standards your facility must comply with. <strong>Not a company that follows standards — one that helps shape them.</strong> ASME BPE is the governing framework cited by every major pharmaceutical hygienic fittings specification globally.</p>
+      </div>
+      <div class="cred-item">
+        <div class="cred-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+        </div>
+        <h3 class="cred-heading">25 years of field data</h3>
+        <p class="cred-body">A proprietary dataset of failure modes, installation observations, replacement frequencies, and site data built across 25 years in pharmaceutical and food manufacturing environments. <strong>No competitor can buy or replicate this.</strong></p>
+      </div>
+      <div class="cred-item">
+        <div class="cred-icon">
+          <svg viewBox="0 0 24 24"><path d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5"/></svg>
+        </div>
+        <h3 class="cred-heading">PT Lab — 3 products in pipeline</h3>
+        <p class="cred-body">Each product stems from a gap identified in real end-user systems through failure investigation. <strong>The R&amp;D model already works</strong> before PT Lab is formally launched. Evidence-led innovation, not speculative development.</p>
+      </div>
+      <div class="cred-item">
+        <div class="cred-icon">
+          <svg viewBox="0 0 24 24"><path d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5"/></svg>
+        </div>
+        <h3 class="cred-heading">PT-U — already commercial</h3>
+        <p class="cred-body">Training platform live behind paywall. £100k revenue target in 2026. <strong>The flywheel is already turning.</strong> Knowledge is already a monetised asset, not a cost centre — reducing platform dependence on PT Commercial alone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PT LAB -->
+<section class="section lab" id="lab">
+  <div class="section-inner">
+    <span class="section-eyebrow reveal">PT Lab</span>
+    <h2 class="section-heading reveal">Turning 25 years of knowledge<br>into public evidence.</h2>
+    <div class="lab-layout reveal">
+      <div>
+        <div class="study">
+          <span class="study-num">001</span>
+          <div><p class="study-title">How long does a gasket really last?</p><p class="study-sub">CIP cycle frequency, chemical exposure &amp; service life</p></div>
+          <span class="study-status status-live">Publishing</span>
+        </div>
+        <div class="study">
+          <span class="study-num">002</span>
+          <div><p class="study-title">The effect of SIP cycling on hose performance</p><p class="study-sub">Temperature profiles &amp; material degradation</p></div>
+          <span class="study-status status-next">Next</span>
+        </div>
+        <div class="study">
+          <span class="study-num">003</span>
+          <div><p class="study-title">Clamp reuse and failure risk</p><p class="study-sub">Torque retention, fatigue cycles &amp; safe reuse thresholds</p></div>
+          <span class="study-status status-planned">Planned</span>
+        </div>
+        <div class="study">
+          <span class="study-num">004</span>
+          <div><p class="study-title">Most common installation errors</p><p class="study-sub">Field observations across pharmaceutical environments</p></div>
+          <span class="study-status status-planned">Planned</span>
+        </div>
+      </div>
+      <div>
+        <p class="lab-quote">"Move from opinion to evidence. That is how authority is built in a regulated market."</p>
+        <p class="lab-body">PT Lab studies are published quarterly — distributed to ASME BPE contacts, PT-U subscribers, and directly to key accounts. Independent, evidence-based, and impossible to replicate without 25 years of field access.</p>
+        <div class="lab-pipeline">
+          <p class="lab-pipeline-label">Product pipeline — in development</p>
+          <div class="pipeline-item"><span class="pipeline-dot"></span>Intelligent clamp — live monitoring &amp; data output</div>
+          <div class="pipeline-item"><span class="pipeline-dot"></span>Failure-predictive gasket assembly</div>
+          <div class="pipeline-item"><span class="pipeline-dot"></span>CIP-cycle optimised hose system</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEW CTA -->
+<section class="review" id="review">
+  <div class="review-inner">
+    <div>
+      <h2 class="review-heading">Book a Connection<br>Reliability Review.</h2>
+      <p class="review-sub">A structured, no-obligation assessment of your facility's connection reliability — what you have, what's at risk, and where the gaps are.</p>
+    </div>
+    <div class="review-form">
+      <input class="review-input" type="text" placeholder="Your name">
+      <input class="review-input" type="text" placeholder="Company &amp; role">
+      <input class="review-input" type="email" placeholder="Email address">
+      <input class="review-input" type="text" placeholder="Facility type (pharma / biotech / F&amp;B)">
+      <button class="btn-white" onclick="alert('Thank you — we\'ll be in touch within 24 hours.')">Request a review</button>
+      <p class="review-note">No obligation. No sales pitch. Just a genuine look at your connections.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <p class="footer-brand">PTL<span>.</span></p>
+      <p class="footer-tagline">The Leading Authority on<br>Connection Reliability.<br><br>Products → Knowledge → Evidence → Intelligence</p>
+    </div>
+    <div>
+      <p class="footer-col-title">Platform</p>
+      <ul class="footer-links">
+        <li><a href="#platform">PT Commercial</a></li>
+        <li><a href="#platform">PT-U</a></li>
+        <li><a href="#lab">PT Lab</a></li>
+        <li><a href="#clamp">PT IQ</a></li>
+        <li><a href="#clamp">Intelligent Clamp</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-col-title">Contact</p>
+      <ul class="footer-links">
+        <li><a href="#review">Book a Reliability Review</a></li>
+        <li><a href="#lab">PT Lab Studies</a></li>
+        <li><a href="#credibility">ASME BPE</a></li>
+        <li><a href="mailto:hello@ptl.com">hello@ptl.com</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 PTL. All rights reserved.</p>
+    <p>ASME BPE Committee Member</p>
+  </div>
+</footer>
+
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
