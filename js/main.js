@@ -216,6 +216,40 @@
     update();
   }
 
+  /* ─────────── capabilities: floating image preview ─────────── */
+  if (finePointer && !reduceMotion) {
+    const capsFloat = document.getElementById("capsFloat");
+    const capsImg = capsFloat && capsFloat.querySelector("img");
+    if (capsFloat) {
+      let fx = 0, fy = 0, tx = 0, ty = 0, active = false, rafOn = false;
+      const follow = () => {
+        fx = lerp(fx, tx, 0.12);
+        fy = lerp(fy, ty, 0.12);
+        capsFloat.style.transform = "";
+        capsFloat.style.translate = `${fx}px ${fy}px`;
+        if (active || Math.abs(fx - tx) > 0.5) requestAnimationFrame(follow);
+        else rafOn = false;
+      };
+      document.querySelectorAll(".cap").forEach((cap) => {
+        cap.addEventListener("mouseenter", () => {
+          const src = cap.dataset.img;
+          if (src && capsImg.getAttribute("src") !== src) capsImg.src = src;
+          active = true;
+          capsFloat.classList.add("is-on");
+          if (!rafOn) { rafOn = true; requestAnimationFrame(follow); }
+        });
+        cap.addEventListener("mouseleave", () => {
+          active = false;
+          capsFloat.classList.remove("is-on");
+        });
+      });
+      addEventListener("mousemove", (e) => {
+        tx = Math.min(e.clientX + 36, innerWidth - capsFloat.offsetWidth - 20);
+        ty = Math.min(e.clientY - capsFloat.offsetHeight / 2, innerHeight - capsFloat.offsetHeight - 20);
+      }, { passive: true });
+    }
+  }
+
   /* ─────────── capabilities accordion ─────────── */
   document.querySelectorAll(".cap").forEach((cap) => {
     const row = cap.querySelector(".cap__row");

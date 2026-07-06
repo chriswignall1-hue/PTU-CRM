@@ -16,10 +16,6 @@
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:ital,opsz,wght@0,14..32,300..700;1,14..32,300..700&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="css/main.css">
 
   <script type="application/ld+json">
@@ -108,6 +104,8 @@
 
     <!-- ══════════════════ HERO ══════════════════ -->
     <section class="hero" id="hero">
+      <img class="hero__bg" src="img/hero.jpg" alt="" aria-hidden="true" fetchpriority="high">
+      <div class="hero__shade" aria-hidden="true"></div>
       <div class="hero__glow hero__glow--a" data-parallax="0.15" aria-hidden="true"></div>
       <div class="hero__glow hero__glow--b" data-parallax="-0.1" aria-hidden="true"></div>
       <div class="hero__ring" data-parallax="0.06" aria-hidden="true"></div>
@@ -145,11 +143,16 @@
     <section class="story" id="story">
       <div class="story__sticky">
         <p class="story__kicker reveal-line"><span class="tick" aria-hidden="true"></span>The studio</p>
-        <p class="story__text" id="storyText">
-          For twenty-five years we’ve believed one thing — great design isn’t decoration.
-          It’s a business advantage. Today we pair that craft with intelligent technology,
-          so the brands we build don’t just look remarkable. <b>They perform.</b>
-        </p>
+        <div class="story__grid">
+          <p class="story__text" id="storyText">
+            For twenty-five years we’ve believed one thing — great design isn’t decoration.
+            It’s a business advantage. Today we pair that craft with intelligent technology,
+            so the brands we build don’t just look remarkable. <b>They perform.</b>
+          </p>
+          <figure class="story__media reveal-line" aria-hidden="true">
+            <img src="img/story.jpg" alt="" loading="lazy" data-parallax-img>
+          </figure>
+        </div>
         <div class="story__facts">
           <div class="story__fact reveal-line">
             <span class="story__num" data-count="25">0</span><span class="story__plus">+</span>
@@ -175,8 +178,9 @@
         <p class="caps__intro reveal-line">One studio. Every discipline — strategy to shipping. No hand-offs, no agencies-of-agencies, no dilution between the idea and the result.</p>
       </header>
 
+      <div class="caps-float" id="capsFloat" aria-hidden="true"><img src="img/work-heritage.jpg" alt=""></div>
       <div class="caps__index" id="capsIndex">
-        <article class="cap" data-hue="a">
+        <article class="cap" data-hue="a" data-img="img/cta.jpg">
           <div class="cap__row" data-cursor="＋">
             <span class="cap__num">01</span>
             <h3 class="cap__name">Brand &amp; Identity</h3>
@@ -188,7 +192,7 @@
           </div>
         </article>
 
-        <article class="cap" data-hue="b">
+        <article class="cap" data-hue="b" data-img="img/work-heritage.jpg">
           <div class="cap__row" data-cursor="＋">
             <span class="cap__num">02</span>
             <h3 class="cap__name">Design &amp; Print</h3>
@@ -200,7 +204,7 @@
           </div>
         </article>
 
-        <article class="cap" data-hue="c">
+        <article class="cap" data-hue="c" data-img="img/work-commerce.jpg">
           <div class="cap__row" data-cursor="＋">
             <span class="cap__num">03</span>
             <h3 class="cap__name">Web &amp; Digital</h3>
@@ -212,7 +216,7 @@
           </div>
         </article>
 
-        <article class="cap" data-hue="d">
+        <article class="cap" data-hue="d" data-img="img/work-concierge.jpg">
           <div class="cap__row" data-cursor="＋">
             <span class="cap__num">04</span>
             <h3 class="cap__name">AI Integration</h3>
@@ -224,7 +228,7 @@
           </div>
         </article>
 
-        <article class="cap" data-hue="e">
+        <article class="cap" data-hue="e" data-img="img/work-ops.jpg">
           <div class="cap__row" data-cursor="＋">
             <span class="cap__num">05</span>
             <h3 class="cap__name">Automation</h3>
@@ -236,7 +240,7 @@
           </div>
         </article>
 
-        <article class="cap" data-hue="f">
+        <article class="cap" data-hue="f" data-img="img/story.jpg">
           <div class="cap__row" data-cursor="＋">
             <span class="cap__num">06</span>
             <h3 class="cap__name">Growth &amp; Marketing</h3>
@@ -263,6 +267,7 @@
         <article class="project" data-cursor="View">
           <div class="project__visual">
             <div class="project__art project__art--heritage" data-parallax-img>
+              <img class="project__img" src="img/work-heritage.jpg" alt="" loading="lazy">
               <span class="project__monogram" aria-hidden="true">Est.<br>1894</span>
             </div>
           </div>
@@ -277,6 +282,7 @@
         <article class="project project--flip" data-cursor="View">
           <div class="project__visual">
             <div class="project__art project__art--commerce" data-parallax-img>
+              <img class="project__img" src="img/work-commerce.jpg" alt="" loading="lazy">
               <div class="project__ui" aria-hidden="true">
                 <div class="project__ui-bar"></div>
                 <div class="project__ui-hero"></div>
@@ -295,6 +301,7 @@
         <article class="project" data-cursor="View">
           <div class="project__visual">
             <div class="project__art project__art--concierge" data-parallax-img>
+              <img class="project__img" src="img/work-concierge.jpg" alt="" loading="lazy">
               <div class="project__chat" aria-hidden="true">
                 <span class="project__bubble project__bubble--q">Do you deliver on Saturdays?</span>
                 <span class="project__bubble project__bubble--a">We do — before noon. Shall I book yours?</span>
@@ -313,6 +320,7 @@
         <article class="project project--flip" data-cursor="View">
           <div class="project__visual">
             <div class="project__art project__art--ops" data-parallax-img>
+              <img class="project__img" src="img/work-ops.jpg" alt="" loading="lazy">
               <div class="project__flow" aria-hidden="true">
                 <span class="project__node">Enquiry</span>
                 <span class="project__wire"></span>
@@ -340,6 +348,7 @@
 
     <!-- ══════════════════ AI & AUTOMATION ══════════════════ -->
     <section class="intel" id="intelligence">
+      <img class="intel__bg" src="img/intel.jpg" alt="" aria-hidden="true" loading="lazy">
       <canvas class="intel__canvas" id="intelCanvas" aria-hidden="true"></canvas>
       <div class="intel__inner">
         <p class="intel__kicker reveal-line"><span class="tick tick--gold" aria-hidden="true"></span>AI &amp; Automation</p>
@@ -432,6 +441,8 @@
 
     <!-- ══════════════════ FINAL CTA ══════════════════ -->
     <section class="cta" id="contact">
+      <img class="cta__bg" src="img/cta.jpg" alt="" aria-hidden="true" loading="lazy">
+      <div class="cta__shade" aria-hidden="true"></div>
       <div class="cta__glow" aria-hidden="true"></div>
       <p class="cta__kicker reveal-line"><span class="tick tick--gold" aria-hidden="true"></span>Next</p>
       <h2 class="cta__title">
