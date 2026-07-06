@@ -289,7 +289,7 @@
           const d2 = dx * dx + dy * dy;
           if (d2 < LINK * LINK) {
             const a = (1 - Math.sqrt(d2) / LINK) * 0.14;
-            ctx.strokeStyle = `rgba(200, 163, 95, ${a})`;
+            ctx.strokeStyle = `rgba(174, 209, 55, ${a})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
@@ -297,7 +297,7 @@
             ctx.stroke();
           }
         }
-        ctx.fillStyle = "rgba(217, 188, 133, 0.5)";
+        ctx.fillStyle = "rgba(195, 221, 102, 0.5)";
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();
