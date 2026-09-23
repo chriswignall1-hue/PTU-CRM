@@ -271,8 +271,18 @@
       // The password is checked by the Google Apps Script, not in this page.
       btn.disabled = true; btn.textContent = 'Checking...';
       try {
-        const res  = await fetch(API, { method: 'POST', body: JSON.stringify({ action: 'login', key: pw }) });
-        const data = await res.json();
+        // Google occasionally answers with an error page instead of JSON, so retry.
+        let data;
+        for (let i = 1; ; i++) {
+          try {
+            const res = await fetch(API, { method: 'POST', body: JSON.stringify({ action: 'login', key: pw }) });
+            data = JSON.parse(await res.text());
+            break;
+          } catch (e) {
+            if (i >= 3) throw e;
+            await new Promise(r => setTimeout(r, 800 * i));
+          }
+        }
         if (data.ok) {
           sessionStorage.setItem(SESSION_KEY, pw);
           window.location.href = CRM_PAGE;

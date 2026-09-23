@@ -163,7 +163,10 @@ const API = 'https://script.google.com/macros/s/AKfycbzamq7kg6Icew4a0Z9ryMtNV1_k
 const KEY = sessionStorage.getItem('ptu_crm_nw_key');
 const SHEETS = ['CSL Seqirus','AstraZeneca Speke','Pharmaron Biologics','GSK Ulverston','ChargePoint Technology','Teva Runcorn','Fluid Engineering','Ipsen Biopharm','Withnell Sensors','TTE Training','SquareOne Training','Thermo Fisher Warrington','AstraZeneca Macclesfield','Ellab UK','Rubix','Therapak Pharma Services','Clean Food Group','Baxter Healthcare','Autichem','Bevie Partners','Diamond Industrial'];
 document.getElementById('f-sheet').insertAdjacentHTML('beforeend',SHEETS.map(s=>`<option value="${s}">${s}</option>`).join(''));
-async function api(body){const res=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({},body,{key:KEY}))});const data=await res.json();if(data&&data.error==='unauthorised'){sessionStorage.removeItem('ptu_crm_nw_key');window.location.replace('login-northwest.html');throw new Error('Signed out');}if(data&&data.error)throw new Error(data.error);return data;}
+async function post(body){const res=await fetch(API,{method:'POST',body:JSON.stringify(Object.assign({},body,{key:KEY}))});const txt=await res.text();try{return JSON.parse(txt);}catch(e){const err=new Error('No response from Google');err.badResponse=true;throw err;}}
+// Google occasionally answers with an error page instead of the data, so retry.
+// 'add' is never retried: the row may already have been saved, which would create a duplicate.
+async function api(body){const tries=body.action==='add'?1:3;let data;for(let i=1;;i++){try{data=await post(body);break;}catch(e){if(i>=tries){if(body.action==='add'&&e.badResponse)throw new Error('Google didn\'t confirm the save. Close this box and check the list before trying again.');throw e;}await new Promise(r=>setTimeout(r,800*i));}}if(data&&data.error==='unauthorised'){sessionStorage.removeItem('ptu_crm_nw_key');window.location.replace('login-northwest.html');throw new Error('Signed out');}if(data&&data.error)throw new Error(data.error);return data;}
 function matchOf(c){return{first:c['First Name']||'',last:c['Last Name']||'',email:c['Email Address']||''};}
 let editingContact=null;
 const PER_PAGE = 50;
